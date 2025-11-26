@@ -11,10 +11,10 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V145.0 (Final Redemption)</title>
+    <title>IonosTek Monitor V146.0 (Final Logic Sync)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. GLOBAL RESET --- */
+        /* --- 1. GLOBAL --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
@@ -85,8 +85,8 @@
             0%, 100% { opacity: 1; transform: scale(1); } 
             50% { opacity: 0.6; transform: scale(0.95); } 
         }
-        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; animation: arrow-pulse 2s infinite; }
-        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-pulse 2s infinite; }
+        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; animation: arrow-pulse 1.5s infinite; }
+        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-pulse 1.5s infinite; }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -108,21 +108,25 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX (FIXED) --- */
+        /* --- 7. POPUP (TOGGLE FIX) --- */
         #lightbox { 
-            display: none !important; 
+            display: none !important; /* Default Closed */
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
             z-index: 9999; 
             align-items: center; justify-content: center;
             cursor: pointer;
         }
+        #lightbox.active { display: flex !important; } /* Open when active */
+        
         #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
         .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
         .lb-close:hover { color: var(--red); }
         
         /* --- 8. MODAL --- */
         .modal { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
+        .modal.active { display: flex !important; }
+        
         .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
         .close:hover { color: #fff; }
@@ -162,7 +166,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleModal('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -203,26 +207,26 @@
                 <div class="c-body">
                     <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
                          referrerpolicy="no-referrer" 
-                         onclick="openLightbox(this.src)" 
+                         onclick="toggleLightbox(this.src)" 
                          onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'">
                 </div>
             </div>
-            <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
-            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="toggleLightbox(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="toggleLightbox(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="toggleLightbox(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
+            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="toggleLightbox(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="toggleLightbox(this.src)"></div></div>
         </div>
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="window.location.reload()">REFRESH</button></div>
-            <span style="color:#666;">V145.0 • Final Redemption</span>
+            <span style="color:#666;">V146.0 • Final Logic Sync</span>
         </div>
     </div>
 
-    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleDisplay('guideModal')">
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleModal('guideModal')">
         <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
+            <span class="close" onclick="toggleModal('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -239,14 +243,16 @@
         </div>
     </div>
 
-    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
+    <div id="lightbox" style="display: none !important;" onclick="toggleLightbox()">
         <span class="lb-close">&times;</span>
-        <img id="lb-img" src="" onclick="toggleDisplay('lightbox')">
+        <img id="lb-img" src="" onclick="toggleLightbox()">
     </div>
 
     <script>
+        // Anti-Copy
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
+        // Clock
         function updateClock() {
             try {
                 const d = new Date();
@@ -260,20 +266,30 @@
             } catch(e){}
         }
 
-        function openLightbox(src) {
-            let lb = document.getElementById('lightbox');
-            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
-            lb.style.setProperty('display', 'flex', 'important');
+        // UI Helpers (Simple Toggle)
+        function toggleLightbox(src) {
+            const lb = document.getElementById('lightbox');
+            const img = document.getElementById('lb-img');
+            
+            // ถ้ากำลังปิดอยู่ และมี src -> เปิด
+            if (!lb.classList.contains('active') && src) {
+                img.src = src + '?t=' + new Date().getTime();
+                lb.classList.add('active');
+            } else {
+                // ถ้าเปิดอยู่ -> ปิด
+                lb.classList.remove('active');
+            }
         }
-        function toggleDisplay(id) {
-            let el = document.getElementById(id);
-            if(el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
-            else el.style.setProperty('display', 'flex', 'important');
+
+        function toggleModal(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('active')) el.classList.remove('active');
+            else el.classList.add('active');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- DATA ENGINE ---
+        // DATA ENGINE
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -284,9 +300,10 @@
 
                 let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
-                // Trend Arrow
+                // Trend Arrow (Right) - Always Show
                 let tColor = 'var(--green)';
                 let tSymbol = '▲'; 
+                
                 if(diff < 0) { 
                     tSymbol = '▼';
                     if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)';
@@ -312,20 +329,40 @@
                         let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
                         if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
                         if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
-                        valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
+                        if(numVal <= -20) valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
+                        else valueHtml = val;
                         break;
                     case 'bt':
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
                         break;
                     case 'kp':
+                        let kpColor = (numVal >= 4) ? 'var(--red)' : 'var(--green)';
+                        let kpArrow = (numVal >= 4) ? BIG_UP : BIG_DOWN;
                         if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
-                        valueHtml = val; break;
+                        valueHtml = `<span class="status-arrow" style="color:${kpColor}">${kpArrow}</span> ${val}`;
+                        break;
                     case 'wind':
+                         let wColor = (numVal >= 500) ? 'var(--red)' : 'var(--green)';
+                         let wArrow = (numVal >= 500) ? BIG_UP : BIG_DOWN;
                          if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
-                         valueHtml = val; break;
+                         valueHtml = `<span class="status-arrow" style="color:${wColor}">${wArrow}</span> ${val}`;
+                         break;
                     case 'sfi':
+                        let sfiColor = (numVal < 70) ? 'var(--red)' : 'var(--green)';
+                        let sfiArrow = (numVal < 70) ? BIG_DOWN : BIG_UP;
                         if(numVal < 70) boxClass = 'c-warn';
-                        valueHtml = val; break;
+                        valueHtml = `<span class="status-arrow" style="color:${sfiColor}">${sfiArrow}</span> ${val}`;
+                        break;
+                    case 'ssn':
+                        let ssnColor = (numVal > 0) ? 'var(--green)' : 'var(--yellow)';
+                        let ssnArrow = (numVal > 0) ? BIG_UP : BIG_DOWN;
+                        valueHtml = `<span class="status-arrow" style="color:${ssnColor}">${ssnArrow}</span> ${val}`;
+                        break;
+                    case 'den':
+                        let dColor = (numVal >= 10) ? 'var(--red)' : 'var(--green)';
+                        let dArrow = (numVal >= 10) ? BIG_UP : BIG_DOWN;
+                        valueHtml = `<span class="status-arrow" style="color:${dColor}">${dArrow}</span> ${val}`;
+                        break;
                     default: valueHtml = val; break;
                 }
                 el.innerHTML = valueHtml + trendHtml;
@@ -333,7 +370,7 @@
             } catch(e){}
         }
 
-        // --- INDEPENDENT FETCH ENGINE (NO BLOCKING) ---
+        // Fetching
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
@@ -346,8 +383,7 @@
             return null;
         }
 
-        // แยกการทำงาน ไม่รอพร้อมกัน
-        async function updateAll() {
+        function startFetch() {
             log('Syncing...');
             
             fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text').then(txt => {
@@ -387,7 +423,7 @@
 
             fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json').then(kp => {
                 if(kp && kp.length>2) {
-                    let l=kp[kp.length-1]; let p=kp[kp.length-2];
+                    let l=kp[kp.length-1]; let p=kp[kp.length-2]; 
                     let kpv = parseFloat(l[1]);
                     set('kp', kpv.toFixed(2), kpv-parseFloat(p[1]));
                     let cond = document.getElementById('hf-cond');
@@ -398,11 +434,11 @@
 
             fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json').then(dst => {
                 if(dst && dst.length>2) {
-                    let l=dst[dst.length-1]; let p=dst[dst.length-2];
+                    let l=dst[dst.length-1]; let p=dst[dst.length-2]; 
                     set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
                 }
             });
-
+            
             log('System Active');
         }
 
@@ -415,7 +451,7 @@
             } catch(e){}
         }
 
-        window.onload = function() { setInterval(updateClock, 1000); updateClock(); updateAll(); setInterval(updateAll, 60000); };
+        window.onload = function() { setInterval(updateClock, 1000); updateClock(); startFetch(); setInterval(startFetch, 60000); };
     </script>
 </body>
 </html>
