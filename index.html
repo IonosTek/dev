@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V93.0 (Production)</title>
+    <title>IonosTek Monitor V94.0 (Universal Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS V93.0 PRODUCTION --- */
+        /* --- GLOBAL RESET & SETTINGS --- */
+        * { box-sizing: border-box; } /* สำคัญมาก: ป้องกัน layout พัง */
+        
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
@@ -15,58 +17,61 @@
         
         body { 
             font-family: 'Chakra Petch', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
+            background: var(--bg); color: var(--text); 
             margin: 0; padding: 0; 
             overflow-x: hidden;
-            /* Anti-Copy Styles */
-            user-select: none; -webkit-user-select: none;
+            user-select: none; /* Anti-Copy */
+            -webkit-user-select: none;
+            min-height: 100vh;
         }
         
-        /* Nav */
+        /* --- NAVIGATION (Layer 100) --- */
         .ionos-nav {
+            position: relative; z-index: 100;
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
         .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; }
         .nav-links { display: flex; gap: 15px; }
-        .nav-links a { 
-            color: #888; text-decoration: none; font-weight: 600; 
-            font-size: 0.9em; cursor: pointer; transition: 0.3s; 
-        }
+        .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* Container - ให้แน่ใจว่าอยู่ชั้นบน (z-index 1) */
-        .container { padding: 15px; max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
+        /* --- MAIN CONTAINER (Layer 1) --- */
+        .container { 
+            position: relative; z-index: 1;
+            padding: 15px; max-width: 1600px; margin: 0 auto; 
+            display: block !important; /* บังคับแสดงผล */
+        }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
-        h1 { margin: 0; font-weight: 700; font-size: 1.8em; letter-spacing: 1px; }
+        h1 { margin: 0; font-weight: 700; font-size: 1.8em; }
         
         .clock-box { text-align: right; }
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
         .local-time { font-size: 0.85em; color: #888; margin-top: 4px; }
         
-        .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; }
-        .dot-blink { animation: fade 2s infinite; color: var(--green); }
-        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; }
-        .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* Stats Grid */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        /* --- STATS GRID --- */
+        .stats { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
+            gap: 10px; margin-bottom: 20px; 
+            width: 100%; /* เต็มความกว้าง */
+        }
         .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
         .val { font-size: 2.0em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
         .lbl { font-size: 0.8em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.7em; color: #666; display: block; margin-top: -5px; }
         
+        /* Colors */
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
         .c-alert { border-top-color: var(--red) !important; color: var(--red); }
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
         
-        /* NVIS Panel */
+        /* --- NVIS PANEL --- */
         .nvis-panel {
             background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
             border: 1px solid #333; border-left: 4px solid var(--purple);
@@ -77,22 +82,28 @@
         .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; letter-spacing: 1px; }
         .nvis-sub { font-size: 0.85em; text-align: right; }
 
-        /* Grid Maps */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
+        /* --- MAPS GRID --- */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); 
+            gap: 20px; 
+            width: 100%;
+        }
         .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; }
         .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
         .c-body { background: #000; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- FIX: Lightbox (ตัวการจอมืด) --- */
+        /* --- LIGHTBOX (Safe Mode: Layer 9999) --- */
         #lightbox { 
-            display: none; /* ปิดตายตั้งแต่เริ่ม */
+            display: none; /* เริ่มต้นปิด */
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
             z-index: 9999; 
             align-items: center; justify-content: center;
         }
+        #lightbox.active { display: flex !important; }
         #lightbox img { max-width: 98%; max-height: 95vh; border: 2px solid #333; }
         
         /* Modal */
@@ -140,4 +151,259 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="document.getElementById('guideModal
+                <button onclick="document.getElementById('guideModal').style.display='flex'" class="btn-guide">📘 OPERATOR GUIDE</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="box" id="b-sfi"><div class="lbl">SFI</div><div class="val" id="v-sfi">--</div><span class="unit">F10.7cm</span></div>
+            <div class="box" id="b-ssn"><div class="lbl">SSN</div><div class="val" id="v-ssn">--</div><span class="unit">Count</span></div>
+            <div class="box" id="b-kp"><div class="lbl">Kp</div><div class="val" id="v-kp">--</div><span class="unit">Index</span></div>
+            <div class="box" id="b-dst"><div class="lbl">Dst</div><div class="val" id="v-dst">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-bz"><div class="lbl">Bz</div><div class="val" id="v-bz">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-bt"><div class="lbl">Bt</div><div class="val" id="v-bt">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-wind"><div class="lbl">Wind</div><div class="val" id="v-wind">--</div><span class="unit">km/s</span></div>
+            <div class="box" id="b-den"><div class="lbl">Den</div><div class="val" id="v-den">--</div><span class="unit">p/cm³</span></div>
+        </div>
+
+        <div class="hf-banner">
+            <span style="color:#888; margin-right:10px; font-size:0.9em;">HF ESTIMATE:</span>
+            <span id="hf-cond" style="font-weight:bold;">INITIALIZING...</span>
+        </div>
+
+        <div class="nvis-panel">
+            <div class="nvis-main">
+                <span class="nvis-icon">⚡ NVIS TACTICAL:</span>
+                <span id="nvis-result" style="font-weight:bold; color:#fff">WAITING DATA...</span>
+            </div>
+            <div class="nvis-sub">
+                <span style="color:#888">Est. foF2:</span> <span id="nvis-fof2" style="color:var(--green)">-- MHz</span>
+                <span style="color:#444; margin:0 5px">|</span>
+                <span style="color:#888">Logic:</span> <span id="nvis-logic">Auto</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card" style="border-color: var(--purple);">
+                <div class="c-head">
+                    <span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> 
+                    <span>SWS/AU</span>
+                </div>
+                <div class="c-body">
+                    <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
+                         referrerpolicy="no-referrer" 
+                         onclick="view(this.src)" 
+                         onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'">
+                </div>
+            </div>
+
+            <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="view(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
+            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
+        </div>
+
+        <div class="footer">
+            <div>
+                <span id="fetch-log">System Ready</span>
+                <button class="btn-retry" onclick="updateAll()">REFRESH</button>
+            </div>
+            <span style="color:#666;">V94.0 • Universal Fix</span>
+        </div>
+    </div>
+
+    <div id="guideModal" class="modal">
+        <div class="m-content">
+            <span class="close" onclick="document.getElementById('guideModal').style.display='none'">&times;</span>
+            <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
+            <div class="guide-sec">
+                <div class="guide-h">★ Understanding Bz (The Switch)</div>
+                <div class="guide-p"><span class="hl-g">Bz Positive (+): "SWITCH CLOSED"</span><br>Shields UP. HF Quiet.</div>
+                <div class="guide-p"><span class="hl-r">Bz Negative (-): "SWITCH OPEN"</span><br>Shields DOWN. Storm Alert!</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" onclick="this.classList.remove('active')">
+        <img id="lb-img">
+    </div>
+
+    <script>
+        // --- 1. ANTI-COPY ---
+        document.addEventListener('keydown', function(e) {
+            if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) {
+                e.preventDefault(); return false;
+            }
+        });
+
+        // --- 2. CLOCK ---
+        function updateClock() {
+            try {
+                const d = new Date();
+                if(document.getElementById('u-h')) {
+                    document.getElementById('u-h').innerText = d.getUTCHours().toString().padStart(2,'0');
+                    document.getElementById('u-m').innerText = d.getUTCMinutes().toString().padStart(2,'0');
+                    const lH = d.getHours().toString().padStart(2,'0');
+                    const lM = d.getMinutes().toString().padStart(2,'0');
+                    document.getElementById('local-clock').innerText = `${lH}:${lM} Local`;
+                }
+            } catch(e){}
+        }
+
+        // --- 3. UI HELPERS ---
+        function view(src) { 
+            let lb = document.getElementById('lightbox');
+            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
+            lb.classList.add('active'); // เพิ่ม class แทนการแก้ style ตรงๆ
+        }
+        
+        function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
+
+        function set(id, val, diff=0) {
+            try {
+                let el = document.getElementById('v-'+id);
+                let box = document.getElementById('b-'+id);
+                if(!el) return;
+                let numVal = parseFloat(val);
+                if(isNaN(numVal)) { el.innerText = val; return; }
+
+                let isBad = false;
+                if(id === 'bz') {
+                    isBad = (numVal < 0);
+                    let arrow = isBad ? '▼' : '▲';
+                    let color = isBad ? 'var(--red)' : 'var(--green)';
+                    el.innerHTML = `<span style="color:${color}; font-size:0.8em;">${arrow}</span> ${val}`;
+                    if(box) box.className = isBad ? 'box c-alert' : 'box c-norm';
+                } else {
+                    if(['kp','wind'].includes(id)) isBad = (numVal >= 4);
+                    else if(['dst'].includes(id)) isBad = (numVal < -50);
+                    else isBad = (diff < 0); 
+
+                    let arrow = diff > 0 ? '▲' : (diff < 0 ? '▼' : '');
+                    let color = isBad ? 'var(--red)' : 'var(--green)';
+                    if(id === 'kp' && numVal >= 4) color = 'var(--red)';
+                    if(id === 'sfi' && numVal < 70) color = 'var(--orange)';
+
+                    el.innerHTML = val + (arrow ? ` <span style="font-size:0.6em; color:${color}">${arrow}</span>` : '');
+                    
+                    if(box) {
+                        if(id==='kp' && numVal>=5) box.className='box c-alert';
+                        else if(id==='sfi' && numVal<80) box.className='box c-warn';
+                        else box.className = 'box c-norm';
+                    }
+                }
+            } catch(e){}
+        }
+
+        // --- 4. DATA FETCHING ---
+        async function fetchText(url) {
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                if(r.ok) return await r.text();
+            } catch(e) {}
+            return null;
+        }
+
+        async function fetchJson(url) {
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                if(r.ok) return await r.json();
+            } catch(e) {}
+            return null;
+        }
+
+        async function updateAll() {
+            log('Syncing...');
+            
+            // SFI
+            let sfiVal = 70; let ssnVal = 0;
+            let txt = await fetchText('https://services.swpc.noaa.gov/text/daily-solar-indices.txt');
+            if(txt) {
+                let lines = txt.trim().split('\n');
+                for(let i=lines.length-1; i>=0; i--) {
+                    if(lines[i].trim().startsWith('20')) {
+                        let cols = lines[i].trim().split(/\s+/);
+                        sfiVal = parseInt(cols[3]);
+                        ssnVal = parseInt(cols[4]);
+                        set('sfi', sfiVal);
+                        set('ssn', ssnVal);
+                        break;
+                    }
+                }
+            }
+
+            // Solar Wind
+            let mag = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json');
+            if(mag && mag.length > 1) {
+                let last = mag[mag.length-1];
+                set('bz', parseFloat(last[3]).toFixed(1)); 
+                set('bt', parseFloat(last[6]).toFixed(1));
+            }
+
+            let plas = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json');
+            if(plas && plas.length > 1) {
+                let last = plas[plas.length-1];
+                set('den', Math.round(parseFloat(last[1])));
+                set('wind', Math.round(parseFloat(last[2])));
+            }
+
+            // Indices
+            let kp = await fetchJson('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+            let kpVal = 2;
+            if(kp && kp.length > 1) {
+                kpVal = parseFloat(kp[kp.length-1][1]);
+                set('kp', kpVal);
+            }
+            
+            let dst = await fetchJson('https://services.swpc.noaa.gov/products/kyoto-dst.json');
+            if(dst && dst.length > 1) {
+                set('dst', parseInt(dst[dst.length-1][1]));
+            }
+
+            // Banner
+            let cond = document.getElementById('hf-cond');
+            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
+            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
+            
+            log('System Active');
+            runNVISModule(sfiVal, kpVal);
+        }
+
+        // --- NVIS MODULE ---
+        function runNVISModule(sfi, kp) {
+            try {
+                if(!sfi) sfi = 70;
+                let now = new Date();
+                let hour = now.getHours();
+                let isDay = (hour >= 6 && hour < 18);
+
+                let foF2 = 2.0 + (sfi * 0.04); 
+                if (!isDay) foF2 = foF2 * 0.55; 
+                if (kp >= 4) foF2 = foF2 * 0.85;
+
+                let recText = "", recColor = "#fff";
+                if (foF2 >= 7.0) { recText = "40m (7 MHz) - EXCELLENT"; recColor = "var(--green)"; } 
+                else if (foF2 >= 5.0) { recText = "40m (WEAK) / 60m"; recColor = "var(--yellow)"; } 
+                else if (foF2 >= 3.5) { recText = "80m (3.5 MHz) - GOOD"; recColor = "var(--green)"; } 
+                else if (foF2 >= 1.8) { recText = "160m (1.8 MHz) - REQ"; recColor = "var(--red)"; } 
+                else { recText = "NO NVIS / BLACKOUT"; recColor = "#888"; }
+
+                document.getElementById('nvis-result').innerText = recText;
+                document.getElementById('nvis-result').style.color = recColor;
+                document.getElementById('nvis-fof2').innerText = foF2.toFixed(2) + " MHz";
+                document.getElementById('nvis-logic').innerText = isDay ? "Day" : "Night";
+            } catch (e) { console.log("NVIS Error"); }
+        }
+
+        // --- INIT ---
+        window.onload = function() {
+            setInterval(updateClock, 1000);
+            updateClock();
+            updateAll();
+            setInterval(updateAll, 60000);
+        };
+    </script>
+</body>
+</html>
