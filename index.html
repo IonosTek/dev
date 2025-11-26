@@ -3,54 +3,84 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V90.9 (Final Fix)</title>
+    <title>IonosTek Monitor V91.0 (Emergency Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS V90.9 STABLE --- */
+        /* --- CSS V91.0 FIXED --- */
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
             --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
         }
         
-        /* Anti-Selection & Basic Body */
         body { 
-            font-family: 'Chakra Petch', 'Segoe UI', Tahoma, sans-serif; /* เพิ่ม Font สำรองกันตัวหนังสือหาย */
-            background: var(--bg); 
-            color: var(--text); 
+            font-family: 'Chakra Petch', sans-serif; 
+            background: var(--bg); color: var(--text); 
             margin: 0; padding: 0; 
             overflow-x: hidden;
-            user-select: none; /* ห้ามลากดำ */
+            user-select: none; /* Anti-Copy */
             -webkit-user-select: none;
         }
         
         /* Nav */
         .ionos-nav {
-            background-color: #000;
-            border-bottom: 1px solid #333;
-            padding: 10px 15px;
-            display: flex; justify-content: space-between; align-items: center;
+            background-color: #000; border-bottom: 1px solid #333;
+            padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; font-size: 1.1em; }
-        
+        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.1em; }
         .nav-links { display: flex; gap: 15px; }
-        .nav-links a { 
-            color: #888; text-decoration: none; font-weight: 600; 
-            transition: 0.3s; cursor: pointer; font-size: 0.9em;
-        }
+        .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        .container { padding: 15px; max-width: 1600px; margin: 0 auto; }
+        .container { padding: 15px; max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
-        h1 { margin: 0; font-weight: 700; font-size: 1.8em; letter-spacing: 1px; }
+        h1 { margin: 0; font-weight: 700; font-size: 1.8em; }
         
         .clock-box { text-align: right; }
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
-        .local-time { font-size: 0.85em; color: #888; margin-top: 4px; font-weight: 500; }
-        .blink-colon { animation: blinker 1s infinite; }
-        @keyframes blinker { 50% { opacity: 0.3; } }
-        
+        .local-time { font-size: 0.85em; color: #888; margin-top: 4px; }
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; }
         .dot-blink { animation: fade 2s infinite; color: var(--green); }
-        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0
+        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+
+        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; }
+
+        /* Stats Grid */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
+        .val { font-size: 2.0em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
+        .lbl { font-size: 0.8em; font-weight: 600; color: #888; text-transform: uppercase; }
+        .unit { font-size: 0.7em; color: #666; display: block; margin-top: -5px; }
+        
+        .c-norm { border-top-color: var(--green) !important; color: var(--green); }
+        .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
+        .c-alert { border-top-color: var(--red) !important; color: var(--red); }
+        
+        .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
+        
+        /* NVIS */
+        .nvis-panel {
+            background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
+            border: 1px solid #333; border-left: 4px solid var(--purple);
+            padding: 10px 15px; margin-bottom: 20px; border-radius: 6px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+        }
+        .nvis-main { display: flex; align-items: center; }
+        .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; letter-spacing: 1px; }
+        .nvis-sub { font-size: 0.85em; text-align: right; }
+
+        /* Grid Maps */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
+        .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; }
+        .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
+        .c-body { background: #000; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
+
+        /* --- LIGHTBOX FIX (CRITICAL) --- */
+        #lightbox { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.98); 
+            display: flex; align-items: center; justify-content: center;
+            /* Default State: Invisible and Behind Everything */
+            opacity
