@@ -3,21 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V90.7 (Integrated)</title>
+    <title>IonosTek Monitor V90.8 (Secure)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS V90.7 INTEGRATED --- */
+        /* --- CSS V90.8 SECURE EDITION --- */
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
             --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
         }
+        
+        /* 1. ป้องกันการลากคลุมดำ (Text Selection Disable) */
         body { 
             font-family: 'Chakra Petch', sans-serif; 
             background: var(--bg); 
             color: var(--text); 
-            margin: 0; padding: 0; user-select: none; 
+            margin: 0; padding: 0; 
             overflow-x: hidden;
+            user-select: none; /* ห้ามลากดำ */
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
         
         /* Nav */
@@ -29,8 +35,16 @@
             font-size: 0.9em;
         }
         .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; }
+        
+        /* แก้ไขเมนูให้แสดงผลชัดเจนและมี cursor เป็นรูปมือ */
         .nav-links { display: flex; gap: 15px; }
-        .nav-links a { color: #888; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; }
+        .nav-links a { 
+            color: #888; 
+            text-decoration: none; 
+            font-weight: 600; 
+            transition: 0.3s; 
+            cursor: pointer; /* บังคับให้เป็นรูปมือ */
+        }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
         .container { padding: 15px; max-width: 1600px; margin: 0 auto; }
@@ -66,7 +80,7 @@
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
         
-        /* --- MODULE 1: NVIS CSS --- */
+        /* NVIS CSS */
         .nvis-panel {
             background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
             border: 1px solid #333;
@@ -80,321 +94,4 @@
         }
         .nvis-main { display: flex; align-items: center; }
         .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; letter-spacing: 1px; }
-        .nvis-sub { font-size: 0.85em; text-align: right; }
-
-        /* Grid System */
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; }
-        .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
-        .c-body { background: #000; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
-
-        /* Modals */
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; align-items: center; justify-content: center; }
-        .m-content { background: var(--card); padding: 30px; border-radius: 10px; max-width: 600px; border: 1px solid #444; position: relative; }
-        .close { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; }
-        
-        /* Lightbox Fix: Hidden by default */
-        #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; }
-        #lightbox img { max-width: 98%; max-height: 95vh; border: 2px solid #333; }
-        
-        .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.75em; color: #444; padding: 0 10px; border-top: 1px solid #222; padding-top: 20px; }
-        #fetch-log { color: var(--orange); font-family: monospace; }
-        .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; font-size: 0.9em; margin-left: 10px; }
-
-        .guide-sec { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
-        .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.1em; }
-        .guide-p { color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 8px; }
-        .hl-g { color: var(--green); font-weight:bold; }
-        .hl-r { color: var(--red); font-weight:bold; }
-        .hl-y { color: var(--yellow); font-weight:bold; }
-
-        @media (max-width: 600px) { 
-            .header { flex-direction: column; text-align: center; gap:10px; } 
-            .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; } 
-            .clock-box { text-align: center; }
-            .ionos-nav { flex-direction: column; gap: 10px; padding-bottom: 15px; }
-            .nvis-panel { flex-direction: column; text-align: center; gap: 5px; }
-            .nvis-sub { width: 100%; border-top: 1px solid #333; padding-top: 5px; margin-top: 5px; }
-        }
-    </style>
-</head>
-<body>
-    <nav class="ionos-nav">
-        <a href="#" class="nav-brand">> IONOSTEK.COM</a>
-        <div class="nav-links">
-            <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
-            <a onclick="updateAll()">[ REFRESH ]</a>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="header">
-            <div>
-                <h1>IONOSTEK <span style="color:#fff">MONITOR</span></h1>
-                <div class="sys-active"><span class="dot-blink">●</span> System Active</div>
-            </div>
-            <div class="clock-box">
-                <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
-                <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="document.getElementById('guideModal').style.display='flex'" class="btn-guide">📘 OPERATOR GUIDE</button>
-            </div>
-        </div>
-
-        <div class="stats">
-            <div class="box" id="b-sfi"><div class="lbl">SFI</div><div class="val" id="v-sfi">--</div><span class="unit">F10.7cm</span></div>
-            <div class="box" id="b-ssn"><div class="lbl">SSN</div><div class="val" id="v-ssn">--</div><span class="unit">Count</span></div>
-            <div class="box" id="b-kp"><div class="lbl">Kp</div><div class="val" id="v-kp">--</div><span class="unit">Index</span></div>
-            <div class="box" id="b-dst"><div class="lbl">Dst</div><div class="val" id="v-dst">--</div><span class="unit">nT</span></div>
-            <div class="box" id="b-bz"><div class="lbl">Bz</div><div class="val" id="v-bz">--</div><span class="unit">nT</span></div>
-            <div class="box" id="b-bt"><div class="lbl">Bt</div><div class="val" id="v-bt">--</div><span class="unit">nT</span></div>
-            <div class="box" id="b-wind"><div class="lbl">Wind</div><div class="val" id="v-wind">--</div><span class="unit">km/s</span></div>
-            <div class="box" id="b-den"><div class="lbl">Den</div><div class="val" id="v-den">--</div><span class="unit">p/cm³</span></div>
-        </div>
-
-        <div class="hf-banner">
-            <span style="color:#888; margin-right:10px; font-size:0.9em;">HF ESTIMATE:</span>
-            <span id="hf-cond" style="font-weight:bold;">INITIALIZING...</span>
-        </div>
-
-        <div class="nvis-panel">
-            <div class="nvis-main">
-                <span class="nvis-icon">⚡ NVIS TACTICAL:</span>
-                <span id="nvis-result" style="font-weight:bold; color:#fff">WAITING DATA...</span>
-            </div>
-            <div class="nvis-sub">
-                <span style="color:#888">Est. foF2:</span> <span id="nvis-fof2" style="color:var(--green)">-- MHz</span>
-                <span style="color:#444; margin:0 5px">|</span>
-                <span style="color:#888">Logic:</span> <span id="nvis-logic">Auto</span>
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="card" style="border-color: var(--purple);">
-                <div class="c-head">
-                    <span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> 
-                    <span>SWS/AU</span>
-                </div>
-                <div class="c-body">
-                    <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
-                         referrerpolicy="no-referrer" 
-                         onclick="view(this.src)" 
-                         onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'">
-                </div>
-            </div>
-
-            <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="view(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
-            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="view(this.src)"></div></div>
-        </div>
-
-        <div id="guideModal" class="modal">
-            <div class="m-content">
-                <span class="close" onclick="document.getElementById('guideModal').style.display='none'">&times;</span>
-                <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
-                <div class="guide-sec">
-                    <div class="guide-h">★ Understanding Bz (The Switch)</div>
-                    <div class="guide-p"><span class="hl-g">Bz Positive (+): "SWITCH CLOSED"</span><br>Shields UP. HF Quiet.</div>
-                    <div class="guide-p"><span class="hl-r">Bz Negative (-): "SWITCH OPEN"</span><br>Shields DOWN. Storm Alert!</div>
-                </div>
-                <div>
-                    <div class="guide-h">★ Reading Values</div>
-                    <div class="guide-p">
-                        <span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br>
-                        <b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div id="lightbox" onclick="this.style.display='none'"><img id="lb-img"></div>
-
-        <div class="footer">
-            <div>
-                <span id="fetch-log">System Ready</span>
-                <button class="btn-retry" onclick="updateAll()">REFRESH</button>
-            </div>
-            <span style="color:#666;">V90.7 • Integrated Final</span>
-        </div>
-    </div>
-
-    <script>
-        // --- 1. CLOCK ENGINE ---
-        function updateClock() {
-            try {
-                const d = new Date();
-                if(document.getElementById('u-h')) {
-                    document.getElementById('u-h').innerText = d.getUTCHours().toString().padStart(2,'0');
-                    document.getElementById('u-m').innerText = d.getUTCMinutes().toString().padStart(2,'0');
-                    const lH = d.getHours().toString().padStart(2,'0');
-                    const lM = d.getMinutes().toString().padStart(2,'0');
-                    document.getElementById('local-clock').innerText = `${lH}:${lM} Local`;
-                }
-            } catch(e){}
-        }
-
-        // --- 2. UI HELPERS ---
-        function view(src) { 
-            let lb = document.getElementById('lightbox');
-            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
-            lb.style.display = 'flex'; 
-        }
-        
-        function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
-
-        function set(id, val, diff=0) {
-            try {
-                let el = document.getElementById('v-'+id);
-                let box = document.getElementById('b-'+id);
-                if(!el) return;
-                
-                let numVal = parseFloat(val);
-                if(isNaN(numVal)) { el.innerText = val; return; }
-
-                // Logic สีและลูกศร
-                let isBad = false;
-                if(id === 'bz') {
-                    isBad = (numVal < 0);
-                    let arrow = isBad ? '▼' : '▲';
-                    let color = isBad ? 'var(--red)' : 'var(--green)';
-                    el.innerHTML = `<span style="color:${color}; font-size:0.8em;">${arrow}</span> ${val}`;
-                    if(box) box.className = isBad ? 'box c-alert' : 'box c-norm';
-                } else {
-                    if(['kp','wind'].includes(id)) isBad = (numVal >= 4);
-                    else if(['dst'].includes(id)) isBad = (numVal < -50);
-                    else isBad = (diff < 0); 
-
-                    let arrow = diff > 0 ? '▲' : (diff < 0 ? '▼' : '');
-                    let color = isBad ? 'var(--red)' : 'var(--green)';
-                    
-                    if(id === 'kp' && numVal >= 4) color = 'var(--red)';
-                    if(id === 'sfi' && numVal < 70) color = 'var(--orange)';
-
-                    el.innerHTML = val + (arrow ? ` <span style="font-size:0.6em; color:${color}">${arrow}</span>` : '');
-                    
-                    if(box) {
-                        if(id==='kp' && numVal>=5) box.className='box c-alert';
-                        else if(id==='sfi' && numVal<80) box.className='box c-warn';
-                        else box.className = 'box c-norm';
-                    }
-                }
-            } catch(e){}
-        }
-
-        // --- 3. DATA FETCHING (Robust) ---
-        async function fetchText(url) {
-            try {
-                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
-                if(r.ok) return await r.text();
-            } catch(e) {}
-            return null;
-        }
-
-        async function fetchJson(url) {
-            try {
-                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
-                if(r.ok) return await r.json();
-            } catch(e) {}
-            return null;
-        }
-
-        async function updateAll() {
-            log('Syncing...');
-            
-            // 1. SFI & SSN
-            let sfiVal = 70; // Default
-            let ssnVal = 0;
-            let txt = await fetchText('https://services.swpc.noaa.gov/text/daily-solar-indices.txt');
-            if(txt) {
-                let lines = txt.trim().split('\n');
-                for(let i=lines.length-1; i>=0; i--) {
-                    if(lines[i].trim().startsWith('20')) {
-                        let cols = lines[i].trim().split(/\s+/);
-                        sfiVal = parseInt(cols[3]);
-                        ssnVal = parseInt(cols[4]);
-                        set('sfi', sfiVal);
-                        set('ssn', ssnVal);
-                        break;
-                    }
-                }
-            }
-
-            // 2. Solar Wind
-            let mag = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json');
-            if(mag && mag.length > 1) {
-                let last = mag[mag.length-1];
-                set('bz', parseFloat(last[3]).toFixed(1)); 
-                set('bt', parseFloat(last[6]).toFixed(1));
-            }
-
-            let plas = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json');
-            if(plas && plas.length > 1) {
-                let last = plas[plas.length-1];
-                set('den', Math.round(parseFloat(last[1])));
-                set('wind', Math.round(parseFloat(last[2])));
-            }
-
-            // 3. Indices
-            let kp = await fetchJson('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
-            let kpVal = 2;
-            if(kp && kp.length > 1) {
-                kpVal = parseFloat(kp[kp.length-1][1]);
-                set('kp', kpVal);
-            }
-            
-            let dst = await fetchJson('https://services.swpc.noaa.gov/products/kyoto-dst.json');
-            if(dst && dst.length > 1) {
-                set('dst', parseInt(dst[dst.length-1][1]));
-            }
-
-            // 4. Update Banner
-            let cond = document.getElementById('hf-cond');
-            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
-            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
-            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
-            
-            log('System Active');
-            
-            // 5. Run NVIS Module
-            runNVISModule(sfiVal, kpVal);
-        }
-
-        // --- MODULE 1 ENGINE: NVIS ---
-        function runNVISModule(sfi, kp) {
-            try {
-                if(!sfi) sfi = 70;
-                
-                let now = new Date();
-                let hour = now.getHours();
-                let isDay = (hour >= 6 && hour < 18);
-
-                let foF2 = 2.0 + (sfi * 0.04); 
-                if (!isDay) foF2 = foF2 * 0.55; 
-                if (kp >= 4) foF2 = foF2 * 0.85;
-
-                let recText = "", recColor = "#fff";
-                if (foF2 >= 7.0) { recText = "40m (7 MHz) - EXCELLENT"; recColor = "var(--green)"; } 
-                else if (foF2 >= 5.0) { recText = "40m (WEAK) / 60m"; recColor = "var(--yellow)"; } 
-                else if (foF2 >= 3.5) { recText = "80m (3.5 MHz) - GOOD"; recColor = "var(--green)"; } 
-                else if (foF2 >= 1.8) { recText = "160m (1.8 MHz) - REQ"; recColor = "var(--red)"; } 
-                else { recText = "NO NVIS / BLACKOUT"; recColor = "#888"; }
-
-                document.getElementById('nvis-result').innerText = recText;
-                document.getElementById('nvis-result').style.color = recColor;
-                document.getElementById('nvis-fof2').innerText = foF2.toFixed(2) + " MHz";
-                document.getElementById('nvis-logic').innerText = isDay ? "Day" : "Night";
-
-            } catch (e) { console.log("NVIS Mod Error: " + e); }
-        }
-
-        // --- MAIN START ---
-        window.onload = function() {
-            setInterval(updateClock, 1000);
-            updateClock();
-            updateAll();
-            setInterval(updateAll, 60000);
-        };
-    </script>
-</body>
-</html>
+        .nvis-
