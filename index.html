@@ -1,13 +1,20 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CTWQCML9WQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CTWQCML9WQ');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V109.0 (Redemption)</title>
+    <title>IonosTek Monitor V110.0 (Perfect Fusion)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- RESET & BASE --- */
-        * { box-sizing: border-box; }
+        /* --- CSS BASED ON V90.0 (STABLE CORE) --- */
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
@@ -15,42 +22,44 @@
         }
         body { 
             font-family: 'Chakra Petch', sans-serif; 
-            background: var(--bg); color: var(--text); 
+            background: var(--bg); 
+            color: var(--text); 
             margin: 0; padding: 0; 
-            /* เอา overflow hidden ออก เพื่อกันเนื้อหาหาย */
-            min-height: 100vh;
+            overflow-x: hidden;
+            /* Anti-Copy */
             user-select: none; -webkit-user-select: none;
         }
         
-        /* --- NAVIGATION --- */
+        /* Nav */
         .ionos-nav {
-            background-color: #000; border-bottom: 1px solid #333;
-            padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
-            height: 50px;
+            background-color: #000;
+            border-bottom: 1px solid #333;
+            padding: 10px 15px;
+            display: flex; justify-content: space-between; align-items: center;
+            font-size: 0.9em;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.2em; letter-spacing: 1px; }
+        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; }
         
+        /* Cursor Blink (> only) */
         @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .blink-symbol { animation: cursor-blink 1s step-end infinite; margin-right: 5px; font-weight: 900; }
+        .blink-symbol { animation: cursor-blink 1s step-end infinite; margin-right: 2px; font-weight: 900; }
 
-        .nav-links { display: flex; gap: 20px; }
-        .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
+        .nav-links { display: flex; gap: 15px; }
+        .nav-links a { color: #888; text-decoration: none; font-weight: 600; transition: 0.3s; cursor: pointer; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* --- MAIN CONTAINER --- */
-        .container { 
-            padding: 20px; max-width: 1800px; margin: 0 auto; 
-            display: block; /* บังคับแสดงผล */
-        }
+        .container { padding: 15px; max-width: 1600px; margin: 0 auto; }
 
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #333; padding-bottom: 15px; }
-        h1 { margin: 0; font-weight: 700; font-size: 2em; color: #fff; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
+        h1 { margin: 0; font-weight: 700; font-size: 1.8em; letter-spacing: 1px; }
         
         .clock-box { text-align: right; }
-        .utc-time { font-size: 1.8em; font-weight: 700; color: var(--blue); line-height: 1; }
-        .local-time { font-size: 0.9em; color: #888; margin-top: 5px; }
+        .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
+        .local-time { font-size: 0.85em; color: #888; margin-top: 4px; font-weight: 500; }
+        .blink-colon { animation: blinker 1s infinite; }
+        @keyframes blinker { 50% { opacity: 0.3; } }
         
-        /* Active Dot */
+        /* System Active Pulse */
         @keyframes sys-pulse { 
             0% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
             50% { opacity: 0.4; text-shadow: none; transform: scale(0.9); } 
@@ -59,16 +68,137 @@
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
         .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: sys-pulse 1.5s infinite ease-in-out; }
 
-        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
+        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; transition: 0.3s; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* --- STATS GRID (8 Columns Fixed) --- */
+        /* Stats Grid (Fixed 8 Cols from V105) */
         .stats { 
             display: grid; 
-            grid-template-columns: repeat(8, 1fr); /* 8 ช่องเป๊ะ */
+            grid-template-columns: repeat(8, 1fr); 
             gap: 10px; 
-            margin-bottom: 25px; 
+            margin-bottom: 20px; 
             width: 100%; 
         }
+        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; transition: transform 0.2s; }
+        .box:hover { transform: translateY(-3px); }
         
-        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top
+        .val { font-size: 1.8em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
+        .lbl { font-size: 0.8em; font-weight: 600; color: #888; text-transform: uppercase; }
+        .unit { font-size: 0.7em; color: #666; display: block; margin-top: -5px; }
+        
+        /* Arrows (Bold) */
+        .status-arrow { font-size: 0.9em; margin-right: 5px; display: inline-block; vertical-align: middle; margin-top: -4px; }
+        .trend-arrow { font-size: 0.6em; margin-left: 5px; display: inline-block; vertical-align: middle; margin-top: -4px; }
+
+        .c-norm { border-top-color: var(--green) !important; color: var(--green); }
+        .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
+        .c-alert { border-top-color: var(--red) !important; color: var(--red); }
+        
+        .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        
+        /* NVIS Panel (New) */
+        .nvis-panel {
+            background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
+            border: 1px solid #333; border-left: 4px solid var(--purple);
+            padding: 10px 15px; margin-bottom: 20px; border-radius: 6px;
+            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .nvis-main { display: flex; align-items: center; }
+        .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; letter-spacing: 1px; }
+        .nvis-sub { font-size: 0.85em; text-align: right; }
+
+        /* Grid Maps */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; max-width: 1600px; margin: 0 auto; }
+        .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
+        .c-body { background: #000; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
+
+        /* Lightbox & Modal (Safe Mode) */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; align-items: center; justify-content: center; }
+        .m-content { background: var(--card); padding: 30px; border-radius: 10px; max-width: 600px; border: 1px solid #444; position: relative; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; }
+        
+        #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 1000; align-items: center; justify-content: center; cursor: pointer; }
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); }
+        
+        .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.75em; color: #444; padding: 0 10px; border-top: 1px solid #222; padding-top: 20px; }
+        #fetch-log { color: var(--orange); font-family: monospace; }
+        .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; font-size: 0.9em; margin-left: 10px; }
+
+        .guide-sec { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.1em; }
+        .guide-p { color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 8px; }
+        .hl-g { color: var(--green); font-weight:bold; }
+        .hl-r { color: var(--red); font-weight:bold; }
+        .hl-y { color: var(--yellow); font-weight:bold; }
+
+        @media (max-width: 1200px) { .stats { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 600px) { 
+            .header { flex-direction: column; text-align: center; gap:10px; } 
+            .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; } 
+            .clock-box { text-align: center; }
+            .ionos-nav { flex-direction: column; gap: 10px; padding-bottom: 15px; }
+            .nvis-panel { flex-direction: column; text-align: center; gap: 5px; }
+            .nvis-sub { width: 100%; border-top: 1px solid #333; padding-top: 5px; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;"> <nav class="ionos-nav">
+        <a href="#" class="nav-brand"><span class="blink-symbol">></span> IONOSTEK.COM</a>
+        <div class="nav-links">
+            <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
+            <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
+            <a onclick="updateAll()">[ REFRESH ]</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>IONOSTEK <span style="color:#fff">MONITOR</span></h1>
+                <div class="sys-active"><span class="sys-dot">●</span> System Active</div>
+            </div>
+            <div class="clock-box">
+                <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
+                <div class="local-time" id="local-clock">--:-- Local</div>
+                <button onclick="document.getElementById('guideModal').style.display='flex'" class="btn-guide">📘 OPERATOR GUIDE</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="box" id="b-sfi"><div class="lbl">SFI</div><div class="val" id="v-sfi">--</div><span class="unit">F10.7cm</span></div>
+            <div class="box" id="b-ssn"><div class="lbl">SSN</div><div class="val" id="v-ssn">--</div><span class="unit">Count</span></div>
+            <div class="box" id="b-kp"><div class="lbl">Kp</div><div class="val" id="v-kp">--</div><span class="unit">Index</span></div>
+            <div class="box" id="b-dst"><div class="lbl">Dst</div><div class="val" id="v-dst">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-bz"><div class="lbl">Bz</div><div class="val" id="v-bz">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-bt"><div class="lbl">Bt</div><div class="val" id="v-bt">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-wind"><div class="lbl">Wind</div><div class="val" id="v-wind">--</div><span class="unit">km/s</span></div>
+            <div class="box" id="b-den"><div class="lbl">Den</div><div class="val" id="v-den">--</div><span class="unit">p/cm³</span></div>
+        </div>
+
+        <div class="hf-banner">
+            <span style="color:#888; margin-right:10px; font-size:0.9em;">HF ESTIMATE:</span>
+            <span id="hf-cond" style="font-weight:bold;">INITIALIZING...</span>
+        </div>
+
+        <div class="nvis-panel">
+            <div class="nvis-main">
+                <span class="nvis-icon">⚡ NVIS TACTICAL:</span>
+                <span id="nvis-result" style="font-weight:bold; color:#fff">WAITING DATA...</span>
+            </div>
+            <div class="nvis-sub">
+                <span style="color:#888">Est. foF2:</span> <span id="nvis-fof2" style="color:var(--green)">-- MHz</span>
+                <span style="color:#444; margin:0 5px">|</span>
+                <span style="color:#888">Logic:</span> <span id="nvis-logic">Auto</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card" style="border-color: var(--purple);">
+                <div class="c-head">
+                    <span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> 
+                    <span>SWS/AU</span>
+                </div>
+                <div class="c-body">
