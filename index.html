@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CTWQCML9WQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CTWQCML9WQ');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V118.0 (Clean Stable)</title>
+    <title>IonosTek Monitor V119.0 (Real Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- GLOBAL RESET --- */
@@ -46,7 +54,7 @@
         
         .clock-box { text-align: right; }
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
-        .local-time { font-size: 0.85em; color: #888; margin-top: 4px; }
+        .local-time { font-size: 0.9em; color: #888; margin-top: 5px; }
         
         /* Active Dot Pulse */
         @keyframes pulse { 
@@ -96,28 +104,15 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- OVERLAYS (SIMPLE CLASS TOGGLE) --- */
-        /* เริ่มต้นซ่อนไว้เสมอ */
+        /* --- OVERLAYS --- */
         .overlay {
-            display: none; /* Hide by default */
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 9999;
-            align-items: center; justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999; align-items: center; justify-content: center;
         }
-        
-        /* เมื่อมี Class .show ให้แสดงผล */
         .overlay.show { display: flex; }
 
-        /* Lightbox Content */
-        #lightbox img { 
-            max-width: 85%; max-height: 85vh; 
-            border: 2px solid #333; 
-            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
-            cursor: pointer; /* รูปเป็นปุ่มกด */
-        }
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
         
-        /* Modal Content */
         .m-content { background: var(--card); padding: 40px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 35px; color: #888; cursor: pointer; }
         .close-btn:hover { color: #fff; }
@@ -218,12 +213,13 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V118.0 • Clean Stable</span>
+            <span style="color:#666;">V119.0 • Real Fix</span>
         </div>
     </div>
 
     <div id="guideModal" class="overlay" onclick="toggleOverlay('guideModal')">
-        <div class="m-content" onclick="event.stopPropagation()"> <span class="close-btn" onclick="toggleOverlay('guideModal')">&times;</span>
+        <div class="m-content" onclick="event.stopPropagation()">
+            <span class="close-btn" onclick="toggleOverlay('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -257,25 +253,21 @@
             } catch(e){}
         }
 
-        // --- SIMPLE & STABLE POPUP LOGIC ---
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
-            let img = document.getElementById('lb-img');
-            img.src = src + '?t=' + new Date().getTime();
-            lb.classList.add('show'); // ใช้ Class ในการแสดงผล
+            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
+            lb.classList.add('show');
         }
 
         function toggleOverlay(id) {
             let el = document.getElementById(id);
-            if (el.classList.contains('show')) {
-                el.classList.remove('show');
-            } else {
-                el.classList.add('show');
-            }
+            if (el.classList.contains('show')) el.classList.remove('show');
+            else el.classList.add('show');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
+        // --- DATA ENGINE ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -329,85 +321,112 @@
             } catch(e){}
         }
 
+        // --- ROBUST FETCH (No Wait) ---
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
-                if(r.ok) { return type === 'json' ? await r.json() : await r.text(); }
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
+            
+            // Backup Proxy
             try {
-                let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
-                if(r.ok) { return type === 'json' ? await r.json() : await r.text(); }
+                let r = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url));
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
+
             return null;
         }
 
         async function updateAll() {
             log('Syncing...');
-            const results = await Promise.allSettled([
-                fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text'),
-                fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json'),
-                fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json'),
-                fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json'),
-                fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json')
-            ]);
+            let hasData = false;
 
-            const txt = results[0].status === 'fulfilled' ? results[0].value : null;
-            const mag = results[1].status === 'fulfilled' ? results[1].value : null;
-            const plas = results[2].status === 'fulfilled' ? results[2].value : null;
-            const kpData = results[3].status === 'fulfilled' ? results[3].value : null;
-            const dstData = results[4].status === 'fulfilled' ? results[4].value : null;
-
-            let sfiVal=70, kpVal=2;
-
-            if(txt) {
-                let lines = txt.trim().split('\n');
-                let curr=null, prev=null;
-                for(let i=lines.length-1; i>=0; i--) {
-                    if(lines[i].trim().startsWith('20')) {
-                        let c = lines[i].trim().split(/\s+/);
-                        if(!curr) curr = c; else { prev = c; break; }
+            // 1. SFI
+            fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text').then(txt => {
+                if(txt) {
+                    hasData = true;
+                    let lines = txt.trim().split('\n');
+                    let curr=null, prev=null;
+                    for(let i=lines.length-1; i>=0; i--) {
+                        if(lines[i].trim().startsWith('20')) {
+                            let c = lines[i].trim().split(/\s+/);
+                            if(!curr) curr = c; else { prev = c; break; }
+                        }
+                    }
+                    if(curr) {
+                        let sfi = parseInt(curr[3]);
+                        set('sfi', sfi, prev ? sfi - parseInt(prev[3]) : 0);
+                        set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
+                        runNVISModule(sfi, 2);
                     }
                 }
-                if(curr) {
-                    sfiVal = parseInt(curr[3]); 
-                    set('sfi', sfiVal, prev ? sfiVal - parseInt(prev[3]) : 0);
-                    set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
+            });
+
+            // 2. MAG
+            fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json').then(mag => {
+                if(mag && mag.length>2) {
+                    hasData = true;
+                    let l=mag[mag.length-1]; let p=mag[mag.length-2];
+                    set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
+                    set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
                 }
-            }
+            });
 
-            if(mag && mag.length>2) { 
-                let l=mag[mag.length-1]; let p=mag[mag.length-2];
-                set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
-                set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
-            }
+            // 3. PLASMA
+            fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json').then(plas => {
+                if(plas && plas.length>2) {
+                    hasData = true;
+                    let l=plas[plas.length-1]; let p=plas[plas.length-2];
+                    set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
+                    set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
+                }
+            });
 
-            if(plas && plas.length>2) { 
-                let l=plas[plas.length-1]; let p=plas[plas.length-2];
-                set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
-                set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
-            }
+            // 4. KP
+            fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json').then(kp => {
+                if(kp && kp.length>2) {
+                    hasData = true;
+                    let l=kp[kp.length-1]; let p=kp[kp.length-2];
+                    let kpv = parseFloat(l[1]);
+                    set('kp', kpv.toFixed(2), kpv-parseFloat(p[1]));
+                    
+                    let cond = document.getElementById('hf-cond');
+                    if(kpv >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+                    else { cond.innerText = "NORMAL OPS"; cond.style.color = "var(--green)"; }
+                }
+            });
 
-            if(kpData && kpData.length>2) { 
-                let l=kpData[kpData.length-1]; let p=kpData[kpData.length-2]; 
-                kpVal=parseFloat(l[1]); set('kp', kpVal.toFixed(2), kpVal-parseFloat(p[1])); 
-            }
+            // 5. DST
+            fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json').then(dst => {
+                if(dst && dst.length>2) {
+                    hasData = true;
+                    let l=dst[dst.length-1]; let p=dst[dst.length-2];
+                    set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
+                }
+            });
 
-            if(dstData && dstData.length>2) { 
-                let l=dstData[dstData.length-1]; let p=dstData[dstData.length-2]; 
-                set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
-            }
-
-            let cond = document.getElementById('hf-cond');
-            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
-            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
-            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
-            log('System Active'); runNVISModule(sfiVal, kpVal);
+            // Timeout Check
+            setTimeout(() => {
+                if(!hasData) {
+                    log('DATA FAILED');
+                    document.getElementById('hf-cond').innerText = "CONNECTION ERROR";
+                    document.getElementById('hf-cond').style.color = "var(--red)";
+                } else {
+                    log('System Active');
+                }
+            }, 5000);
         }
 
         function runNVISModule(sfi, kp) {
-            try { if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
+            try { 
+                if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
                 let foF2 = 2.0 + (sfi * 0.04); if(!isDay) foF2*=0.55; if(kp>=4) foF2*=0.85;
-                let t="", c="#fff"; if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} else{t="NO NVIS / BLACKOUT";c="#888";}
+                let t="", c="#fff"; 
+                if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} 
+                else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} 
+                else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} 
+                else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} 
+                else{t="NO NVIS / BLACKOUT";c="#888";}
                 document.getElementById('nvis-result').innerText=t; document.getElementById('nvis-result').style.color=c;
                 document.getElementById('nvis-fof2').innerText=foF2.toFixed(2)+" MHz"; document.getElementById('nvis-logic').innerText=isDay?"Day":"Night";
             } catch(e){}
