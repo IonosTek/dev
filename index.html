@@ -11,7 +11,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V143.0 (Final Corrected)</title>
+    <title>IonosTek Monitor V144.0 (Popup Reset)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- GLOBAL RESET --- */
@@ -81,12 +81,9 @@
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
         /* ARROWS */
-        @keyframes arrow-pulse { 
-            0%, 100% { opacity: 1; transform: scale(1); } 
-            50% { opacity: 0.6; transform: scale(0.95); } 
-        }
-        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; animation: arrow-pulse 1.5s infinite; }
-        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-pulse 1.5s infinite; }
+        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; }
+        @keyframes arrow-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-bounce 2s infinite; }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -108,22 +105,26 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- LIGHTBOX --- */
-        #lightbox { 
-            display: none !important; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.98); 
-            z-index: 9999; 
+        /* --- POPUP (RESET LOGIC) --- */
+        .overlay {
+            display: none !important; /* Default OFF */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 10000; 
             align-items: center; justify-content: center;
-            cursor: pointer;
         }
-        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
-        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
-        .lb-close:hover { color: var(--red); }
+        /* Use Class to Override !important */
+        .overlay.active { display: flex !important; }
+
+        #lightbox img { 
+            max-width: 85%; max-height: 85vh; 
+            border: 2px solid #333; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
+            cursor: pointer; 
+            pointer-events: auto; /* Clickable */
+        }
         
-        /* --- MODAL --- */
-        .modal { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
-        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        /* Modal Content */
+        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
         .close:hover { color: #fff; }
 
@@ -132,7 +133,7 @@
         .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; margin-left: 10px; }
 
         .guide-sec { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #333; }
-        .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.1em; }
+        .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.2em; }
         .guide-p { color: #ccc; font-size: 1em; line-height: 1.6; margin-bottom: 8px; }
         .hl-g { color: var(--green); font-weight:bold; }
         .hl-r { color: var(--red); font-weight:bold; }
@@ -169,7 +170,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="openModal()" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -223,13 +224,13 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="window.location.reload()">REFRESH</button></div>
-            <span style="color:#666;">V143.0 • Final Corrected</span>
+            <span style="color:#666;">V144.0 • Popup Reset</span>
         </div>
     </div>
 
-    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleDisplay('guideModal')">
+    <div id="guideModal" class="overlay" style="display: none !important;" onclick="closeModal()">
         <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -246,10 +247,8 @@
         </div>
     </div>
 
-    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
-        <span class="lb-close">&times;</span>
-        <img id="lb-img" src="" onclick="toggleDisplay('lightbox')">
-    </div>
+    <div id="lightbox" class="overlay" style="display: none !important;" onclick="closeLightbox()">
+        <img id="lb-img" src="" onclick="event.stopPropagation(); closeLightbox();"> </div>
 
     <script>
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
@@ -267,21 +266,29 @@
             } catch(e){}
         }
 
+        // --- POPUP LOGIC (STRICT) ---
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
-            lb.style.setProperty('display', 'flex', 'important');
+            lb.classList.add('active'); // เพิ่ม Class เพื่อ Override !important
         }
 
-        function toggleDisplay(id) {
-            let el = document.getElementById(id);
-            if(el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
-            else el.style.setProperty('display', 'flex', 'important');
+        function closeLightbox() {
+            let lb = document.getElementById('lightbox');
+            lb.classList.remove('active'); // เอา Class ออก กลับไปปิดตาย
+        }
+
+        function openModal() {
+            document.getElementById('guideModal').classList.add('active');
+        }
+        
+        function closeModal() {
+            document.getElementById('guideModal').classList.remove('active');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- DATA ENGINE (FULL ARROWS) ---
+        // --- DATA ENGINE (FULL ARROW) ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -292,54 +299,42 @@
 
                 let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
-                // Trend Arrow (Right)
-                if(diff !== 0) {
-                    let tColor = 'var(--green)';
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
-                    else tColor = (diff < 0) ? 'var(--red)' : 'var(--green)'; 
-                    let tSymbol = (diff > 0) ? '▲' : '▼';
-                    trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
+                // Trend Arrow (Right) - Show Always
+                let tColor = 'var(--green)';
+                let tSymbol = '▲'; 
+                
+                if(diff < 0) { 
+                    tSymbol = '▼';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)';
+                    else tColor = 'var(--red)'; 
+                } else { 
+                    tSymbol = '▲';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0 ? 'var(--red)' : 'var(--green)');
+                    else tColor = 'var(--green)';
                 }
+                trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
 
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
-                // Status Arrow (Left) - Added to ALL metrics
+                // Status Arrow (Left) - All Metrics
+                let bzColor, bzArrow;
                 switch(id) {
                     case 'sfi':
                     case 'ssn':
-                        // SFI/SSN: ค่าสูง=ดี (เขียวขึ้น)
-                        let sfiColor = (numVal < 70) ? 'var(--red)' : 'var(--green)';
-                        let sfiArrow = (numVal < 70) ? BIG_DOWN : BIG_UP;
+                        bzColor = (numVal < 70) ? 'var(--red)' : 'var(--green)';
+                        bzArrow = (numVal < 70) ? BIG_DOWN : BIG_UP;
                         if(numVal < 70) boxClass = 'c-warn'; 
-                        valueHtml = `<span class="status-arrow" style="color:${sfiColor}">${sfiArrow}</span> ${val}`;
+                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
-
                     case 'kp':
-                        // KP: ค่าต่ำ=ดี (เขียวลง)
-                        let kpColor = (numVal >= 4) ? 'var(--red)' : 'var(--green)';
-                        let kpArrow = (numVal >= 4) ? BIG_UP : BIG_DOWN;
+                        bzColor = (numVal >= 4) ? 'var(--red)' : 'var(--green)';
+                        bzArrow = (numVal >= 4) ? BIG_UP : BIG_DOWN;
                         if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
-                        valueHtml = `<span class="status-arrow" style="color:${kpColor}">${kpArrow}</span> ${val}`;
+                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
-                        
-                    case 'wind':
-                        // Wind: ค่าต่ำ=ดี (เขียวลง)
-                        let wColor = (numVal >= 500) ? 'var(--red)' : 'var(--green)';
-                        let wArrow = (numVal >= 500) ? BIG_UP : BIG_DOWN;
-                        if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
-                        valueHtml = `<span class="status-arrow" style="color:${wColor}">${wArrow}</span> ${val}`;
-                        break;
-
-                    case 'den':
-                        // Den: ค่าต่ำ=ดี (เขียวลง)
-                        let dColor = (numVal >= 10) ? 'var(--red)' : 'var(--green)';
-                        let dArrow = (numVal >= 10) ? BIG_UP : BIG_DOWN;
-                        valueHtml = `<span class="status-arrow" style="color:${dColor}">${dArrow}</span> ${val}`;
-                        break;
-
                     case 'bz':
-                        let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
-                        let bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
+                        bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
+                        bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
                         if(numVal < 0) boxClass = 'c-warn'; if(numVal <= -5) boxClass = 'c-alert'; 
                         valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
@@ -352,14 +347,25 @@
                     case 'bt':
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
                         break;
+                    case 'wind':
+                        bzColor = (numVal >= 500) ? 'var(--red)' : 'var(--green)';
+                        bzArrow = (numVal >= 500) ? BIG_UP : BIG_DOWN;
+                        if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
+                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
+                        break;
+                    case 'den':
+                        bzColor = (numVal >= 10) ? 'var(--red)' : 'var(--green)';
+                        bzArrow = (numVal >= 10) ? BIG_UP : BIG_DOWN;
+                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
+                        break;
+                    default: valueHtml = val; break;
                 }
-
                 el.innerHTML = valueHtml + trendHtml;
                 if(box) box.className = 'box ' + boxClass;
             } catch(e){}
         }
 
-        // Fetching (Independent)
+        // 5. FETCH
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
