@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V94.1 (Cmd Blink)</title>
+    <title>IonosTek Monitor V94.2 (Cursor Blink)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- GLOBAL RESET & SETTINGS --- */
+        /* --- GLOBAL SETTINGS --- */
         * { box-sizing: border-box; }
         
         :root { 
@@ -20,40 +20,44 @@
             background: var(--bg); color: var(--text); 
             margin: 0; padding: 0; 
             overflow-x: hidden;
-            user-select: none; /* Anti-Copy */
+            user-select: none; /* ห้ามลากดำ */
             -webkit-user-select: none;
             min-height: 100vh;
         }
         
-        /* --- NAVIGATION (Layer 100) --- */
+        /* --- NAVIGATION --- */
         .ionos-nav {
             position: relative; z-index: 100;
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
 
-        /* --- COMMAND PROMPT BLINK EFFECT --- */
-        @keyframes cmd-blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-
+        /* LOGO STYLING */
         .nav-brand { 
             color: var(--green); 
             text-decoration: none; 
             font-weight: bold; 
             font-size: 1.1em; 
             letter-spacing: 1px;
-            /* Apply the blink animation */
-            animation: cmd-blink 1s step-end infinite;
         }
-        /* ------------------------------------ */
+
+        /* CURSOR BLINK ANIMATION (เฉพาะ >) */
+        @keyframes cursor-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        .blink-symbol {
+            animation: cursor-blink 1s step-end infinite;
+            margin-right: 2px;
+            font-weight: 900;
+        }
+        /* -------------------------------- */
 
         .nav-links { display: flex; gap: 15px; }
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* --- MAIN CONTAINER (Layer 1) --- */
+        /* --- LAYOUT --- */
         .container { 
             position: relative; z-index: 1;
             padding: 15px; max-width: 1600px; margin: 0 auto; 
@@ -111,7 +115,7 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- LIGHTBOX (Safe Mode: Layer 9999) --- */
+        /* --- LIGHTBOX (Safety First) --- */
         #lightbox { 
             display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -150,7 +154,8 @@
 <body oncontextmenu="return false;">
 
     <nav class="ionos-nav">
-        <a href="#" class="nav-brand">> IONOSTEK.COM</a>
+        <a href="#" class="nav-brand"><span class="blink-symbol">></span> IONOSTEK.COM</a>
+        
         <div class="nav-links">
             <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
             <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
@@ -225,7 +230,7 @@
                 <span id="fetch-log">System Ready</span>
                 <button class="btn-retry" onclick="updateAll()">REFRESH</button>
             </div>
-            <span style="color:#666;">V94.1 • Cmd Blink</span>
+            <span style="color:#666;">V94.2 • Cursor Blink</span>
         </div>
     </div>
 
