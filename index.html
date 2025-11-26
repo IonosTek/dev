@@ -11,7 +11,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V134.0 (Touch Logic Overhaul)</title>
+    <title>IonosTek Monitor V135.0 (Force Arrow)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL RESET --- */
@@ -37,8 +37,8 @@
         }
         .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.2em; letter-spacing: 1px; }
         
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
-        .blink-symbol { animation: blink 1s step-end infinite; margin-right: 2px; font-weight: 900; }
+        @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        .blink-symbol { animation: cursor-blink 1s step-end infinite; margin-right: 2px; font-weight: 900; }
 
         .nav-links { display: flex; gap: 20px; }
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
@@ -63,7 +63,7 @@
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
         .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: sys-pulse 1.5s infinite ease-in-out; }
 
-        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
+        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
         /* --- 4. STATS GRID (8 COLS) --- */
@@ -107,33 +107,24 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX & OVERLAY (New Logic) --- */
-        /* Overlay พื้นหลัง */
-        .overlay {
-            display: none; /* ซ่อนเป็นค่าเริ่มต้น */
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+        /* --- 7. LIGHTBOX --- */
+        #lightbox { 
+            display: none; /* ซ่อนโดย default แต่จะถูก override โดย class .show */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
-            z-index: 10000; 
+            z-index: 9999; 
             align-items: center; justify-content: center;
+            cursor: pointer;
         }
-
-        /* Class .active ใช้เปิด Overlay */
-        .overlay.active {
-            display: flex !important; /* ใช้ flex เพื่อจัดกลาง */
-        }
-
-        /* รูปใน Lightbox */
-        #lightbox-img { 
-            max-width: 85%; max-height: 85vh; 
-            border: 2px solid #333; 
-            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
-            cursor: pointer; /* รูปเป็นปุ่มปิด */
-        }
+        #lightbox.show { display: flex !important; } /* บังคับเปิด */
         
-        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10001; }
-        .lb-close:hover { color: var(--red); }
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
+        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
         
-        /* Modal Content */
+        /* --- 8. MODAL --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
+        .modal.show { display: flex !important; }
+
         .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
         .close:hover { color: #fff; }
@@ -180,7 +171,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="openModal('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleModal('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -234,13 +225,13 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V134.0 • Touch Logic Overhaul</span>
+            <span style="color:#666;">V135.0 • Force Arrow</span>
         </div>
     </div>
 
-    <div id="guideModal" class="overlay" onclick="closeModal('guideModal')">
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleModal('guideModal')">
         <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close" onclick="closeModal('guideModal')">&times;</span>
+            <span class="close" onclick="toggleModal('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -257,15 +248,15 @@
         </div>
     </div>
 
-    <div id="lightbox" class="overlay" onclick="closeLightbox()">
-        <span class="lb-close" onclick="closeLightbox()">&times;</span>
-        <img id="lightbox-img" src="" onclick="closeLightbox()"> </div>
+    <div id="lightbox" class="overlay" style="display: none !important;" onclick="closeLightbox()">
+        <span class="lb-close">&times;</span>
+        <img id="lb-img" src="" onclick="event.stopPropagation(); closeLightbox();"> </div>
 
     <script>
-        // 1. Anti-Copy
+        // 1. ANTI-COPY
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
-        // 2. Clock
+        // 2. CLOCK
         function updateClock() {
             try {
                 const d = new Date();
@@ -279,32 +270,24 @@
             } catch(e){}
         }
 
-        // 3. NEW POPUP LOGIC (CLASS BASED)
+        // 3. POPUP LOGIC (CLASS BASED + INLINE OVERRIDE)
         function openLightbox(src) {
-            const lb = document.getElementById('lightbox');
-            const img = document.getElementById('lightbox-img');
-            img.src = src + '?t=' + new Date().getTime();
-            lb.classList.add('active'); // เพิ่ม Class active เพื่อแสดงผล
+            let lb = document.getElementById('lightbox');
+            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
+            lb.style.setProperty('display', 'flex', 'important');
         }
-
         function closeLightbox() {
-            const lb = document.getElementById('lightbox');
-            lb.classList.remove('active'); // ลบ Class active เพื่อซ่อน
+            let lb = document.getElementById('lightbox');
+            lb.style.setProperty('display', 'none', 'important');
         }
-
-        function openModal(id) {
-            document.getElementById(id).classList.add('active');
+        function toggleModal(id) {
+            let el = document.getElementById(id);
+            if (el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
+            else el.style.setProperty('display', 'flex', 'important');
         }
-
-        function closeModal(id) {
-            // ถ้าไม่ได้ส่ง id มา ให้ปิด guideModal เป็น default
-            const target = id ? id : 'guideModal';
-            document.getElementById(target).classList.remove('active');
-        }
-        
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // 4. DATA ENGINE
+        // 4. DATA DISPLAY (FORCE ARROW LOGIC)
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -313,24 +296,28 @@
                 let numVal = parseFloat(val);
                 if(isNaN(numVal)) { el.innerText = val; return; }
 
-                let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
+                let boxClass = 'c-norm'; 
+                let valueHtml = val; 
+                let trendHtml = '';
 
-                // Trend Arrow (Right)
-                if(diff !== 0) {
-                    // แสดงลูกศรทุกตัว ถ้ามีการเปลี่ยนแปลง
-                    let tColor = 'var(--green)';
-                    // Logic: KP, Wind, Den ยิ่งมากยิ่งแย่ (แดง)
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)';
-                    // Logic: อื่นๆ ยิ่งมากยิ่งดี (เขียว) - ยกเว้น Bz/Dst ที่ต้องดูเครื่องหมาย
-                    else tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
-                    
-                    let tSymbol = (diff > 0) ? '▲' : '▼';
-                    trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
+                // --- FORCE TREND ARROW (ALWAYS SHOW) ---
+                let tColor = 'var(--green)';
+                let tSymbol = '▲'; // Default Up (Stable/Good)
+                
+                if(diff < 0) { // Decreasing
+                    tSymbol = '▼';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)'; // Decreasing is Good for these
+                    else tColor = 'var(--red)'; // Decreasing is Bad for SFI, SSN, etc.
+                } else { // Increasing or Stable (diff >= 0)
+                    tSymbol = '▲';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0 ? 'var(--red)' : 'var(--green)'); // Increase is Bad, Stable is Good
+                    else tColor = 'var(--green)'; // Increase/Stable is Good for SFI
                 }
+                trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
 
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
-                // Status Arrow (Left) - Only for specific metrics
+                // Status Arrow (Left)
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
@@ -405,7 +392,6 @@
                 }
                 if(curr) {
                     sfiVal = parseInt(curr[3]); 
-                    // Fix: Always show trend even if diff is 0 (use prev value if avail)
                     set('sfi', sfiVal, prev ? sfiVal - parseInt(prev[3]) : 0);
                     set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
                 }
