@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V90.3 (SEA Edition)</title>
+    <title>IonosTek Monitor V90.4 (Stable SEA)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CORE CSS (V90.3) --- */
+        /* --- CORE CSS V90.4 --- */
         :root { 
-            --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
+            --bg: #0b0b0b; --card: #141414; --text: #e0e0e0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
             --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
         }
@@ -17,20 +17,17 @@
             background: var(--bg); 
             color: var(--text); 
             margin: 0; padding: 0; user-select: none; 
+            overflow-x: hidden; /* Prevent horizontal scroll */
         }
         
         /* Navigation */
         .ionos-nav {
-            background-color: #000;
-            border-bottom: 1px solid #333;
-            padding: 10px 15px;
-            display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.9em;
+            background-color: #000; border-bottom: 1px solid #333;
+            padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; }
-        .nav-links { display: flex; gap: 15px; }
-        .nav-links a { color: #888; text-decoration: none; font-weight: 600; transition: 0.3s; }
-        .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
+        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; font-size: 1.1em; }
+        .nav-links a { color: #888; text-decoration: none; font-weight: 600; font-size: 0.9em; margin-left: 15px; cursor: pointer; }
+        .nav-links a:hover { color: #fff; }
 
         .container { padding: 15px; max-width: 1600px; margin: 0 auto; }
 
@@ -41,52 +38,12 @@
         .clock-box { text-align: right; }
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
         .local-time { font-size: 0.85em; color: #888; margin-top: 4px; font-weight: 500; }
-        .blink-colon { animation: blinker 1s infinite; }
-        @keyframes blinker { 50% { opacity: 0.3; } }
         
-        .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; }
-        .dot-blink { animation: fade 2s infinite; color: var(--green); }
-        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .sys-status { font-size: 0.8em; color: #666; margin-top: 5px; }
+        .dot { color: var(--green); animation: blink 2s infinite; }
+        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; transition: 0.3s; }
-        .btn-guide:hover { background: var(--blue); color: #fff; }
-
-        /* Stats Grid */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; transition: transform 0.2s; }
-        .box:hover { transform: translateY(-3px); }
-        .val { font-size: 1.8em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
-        .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
-        .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
-        
-        /* Status Indicators */
-        .status-arrow-main { font-size: 1.2em; font-weight: 900; margin-right: 8px; display: inline-block; position: relative; top: -0.05em; }
-        .trend { font-size: 0.6em; font-weight: 900; display: inline-block; margin-left: 5px; animation: arrow-bounce 2s infinite; position: relative; top: -0.15em; }
-        @keyframes arrow-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-
-        .c-norm { border-top-color: var(--green) !important; color: var(--green); }
-        .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
-        .c-alert { border-top-color: var(--red) !important; color: var(--red); }
-        
-        .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
-        /* --- NVIS MODULE CSS --- */
-        .nvis-panel {
-            background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
-            border: 1px solid #333;
-            border-left: 4px solid var(--purple);
-            padding: 10px 20px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-        }
-        .nvis-main { display: flex; align-items: center; gap: 15px; }
-        .nvis-icon { color: var(--purple); font-weight: 800; letter-spacing: 1px; font-size: 1.1em; }
-        .nvis-res-box { font-size: 1.4em; font-weight: bold; color: #fff; text-shadow: 0 0 10px rgba(213, 0, 249, 0.3); }
-        .nvis-sub { font-size: 0.9em; text-align: right; }
-        .nvis-label { color: #666; font-size: 0.8em; text-transform: uppercase; }
-
-        /* Image Grid */
-        .grid { display: grid; grid-template-columns: repeat(auto
+        /* Stats Grid (6 Boxes) */
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .box { background: var(--card); padding: 12px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
+        .val { font-size: 1
