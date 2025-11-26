@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CTWQCML9WQ"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-CTWQCML9WQ');
+    </script>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V128.0 (Absolute Fix)</title>
+    <title>IonosTek Monitor V129.0 (Unstoppable)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL RESET --- */
@@ -47,9 +55,13 @@
         .local-time { font-size: 0.9em; color: #888; margin-top: 4px; }
         
         /* Active Dot Pulse */
-        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        @keyframes sys-pulse { 
+            0% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
+            50% { opacity: 0.4; text-shadow: none; transform: scale(0.9); } 
+            100% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
+        }
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
-        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: fade 2s infinite; }
+        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: sys-pulse 1.5s infinite ease-in-out; }
 
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
@@ -67,10 +79,19 @@
         .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
-        /* ARROWS */
-        .status-arrow { font-size: 1em; margin-right: 8px; display: inline-block; margin-top: -3px; font-weight: 900; }
-        @keyframes arrow-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-bounce 2s infinite; }
+        /* ARROWS & ANIMATION */
+        @keyframes arrow-pulse { 
+            0%, 100% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.6; transform: scale(0.95); } 
+        }
+        .status-arrow { 
+            font-size: 1em; margin-right: 5px; vertical-align: middle; display: inline-block; margin-top: -3px; font-weight: 900; 
+            animation: arrow-pulse 2s infinite;
+        }
+        .trend-arrow { 
+            font-size: 0.6em; margin-left: 8px; vertical-align: middle; display: inline-block; margin-top: -5px; 
+            animation: arrow-pulse 2s infinite;
+        }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -92,22 +113,15 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. OVERLAYS (SAFE MODE CSS) --- */
-        .overlay {
-            /* พื้นฐานซ่อนไว้ */
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 10000; 
-            align-items: center; justify-content: center;
-        }
-        /* Class สำหรับสั่งโชว์ */
-        .overlay.show { display: flex !important; }
-
-        /* Lightbox Content */
+        /* --- 7. POPUP (FIXED) --- */
+        /* ใส่ !important ใน CSS เพื่อความชัวร์อีกชั้น */
+        #lightbox { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center; cursor: pointer; }
         #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
+        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
         
-        /* Modal Content */
-        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
+        /* --- 8. MODAL (FIXED) --- */
+        .modal { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
+        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
         .close:hover { color: #fff; }
 
@@ -115,6 +129,7 @@
         #fetch-log { color: var(--orange); font-family: monospace; }
         .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; margin-left: 10px; }
 
+        /* Guide Modal CSS */
         .guide-sec { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #333; }
         .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.2em; }
         .guide-p { color: #ccc; font-size: 1em; line-height: 1.6; margin-bottom: 8px; }
@@ -140,7 +155,7 @@
         <div class="nav-links">
             <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
             <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
-            <a onclick="updateAll()">[ REFRESH ]</a>
+            <a onclick="location.reload()">[ REFRESH ]</a>
         </div>
     </nav>
 
@@ -153,7 +168,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleOverlay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -201,4 +216,245 @@
             <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
             <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
             <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
-            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="
+            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
+        </div>
+
+        <div class="footer">
+            <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="location.reload()">REFRESH</button></div>
+            <span style="color:#666;">V129.0 • Unstoppable Engine</span>
+        </div>
+    </div>
+
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleDisplay('guideModal')">
+        <div class="m-content" onclick="event.stopPropagation()">
+            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
+            <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
+            <div class="guide-sec">
+                <div class="guide-h">★ Understanding Bz (The Switch)</div>
+                <div class="guide-p"><span class="hl-g">Bz Positive (+): "SWITCH CLOSED"</span><br>Shields UP. HF Quiet.</div>
+                <div class="guide-p"><span class="hl-r">Bz Negative (-): "SWITCH OPEN"</span><br>Shields DOWN. Storm Alert!</div>
+            </div>
+            <div>
+                <div class="guide-h">★ Reading Values</div>
+                <div class="guide-p"><span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br><b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable</div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
+        <span class="lb-close">&times;</span>
+        <img id="lb-img" src="" onclick="toggleDisplay('lightbox')">
+    </div>
+
+    <script>
+        // 1. UTILS
+        document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
+
+        function updateClock() {
+            try {
+                const d = new Date();
+                if(document.getElementById('u-h')) {
+                    document.getElementById('u-h').innerText = d.getUTCHours().toString().padStart(2,'0');
+                    document.getElementById('u-m').innerText = d.getUTCMinutes().toString().padStart(2,'0');
+                    const lH = d.getHours().toString().padStart(2,'0');
+                    const lM = d.getMinutes().toString().padStart(2,'0');
+                    document.getElementById('local-clock').innerText = `${lH}:${lM} Local`;
+                }
+            } catch(e){}
+        }
+
+        function openLightbox(src) {
+            let lb = document.getElementById('lightbox');
+            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
+            lb.style.setProperty('display', 'flex', 'important');
+        }
+
+        function toggleDisplay(id) {
+            let el = document.getElementById(id);
+            if(el.style.display === 'flex') { el.style.setProperty('display', 'none', 'important'); } 
+            else { el.style.setProperty('display', 'flex', 'important'); }
+        }
+        
+        function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
+
+        // 2. DISPLAY ENGINE (LOGIC V120)
+        function set(id, val, diff=0) {
+            try {
+                let el = document.getElementById('v-'+id);
+                let box = document.getElementById('b-'+id);
+                if(!el) return;
+                let numVal = parseFloat(val);
+                if(isNaN(numVal)) { el.innerText = val; return; }
+
+                let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
+
+                // Trend (Right)
+                if(diff !== 0) {
+                    // แสดงเฉพาะ DST และ BZ
+                    if(['dst', 'bz'].includes(id)) {
+                        let tColor = (diff > 0) ? 'var(--green)' : 'var(--red)';
+                        if(['dst', 'bz'].includes(id)) tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
+                        let tSymbol = (diff > 0) ? '▲' : '▼';
+                        trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
+                    }
+                }
+
+                const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
+
+                // Status (Left)
+                switch(id) {
+                    case 'bz':
+                        let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
+                        let bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
+                        if(numVal < 0) boxClass = 'c-warn'; if(numVal <= -5) boxClass = 'c-alert'; 
+                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
+                        break;
+                    case 'dst':
+                        let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
+                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
+                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
+                        if(numVal <= -20) valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
+                        else valueHtml = val;
+                        break;
+                    case 'bt':
+                        valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
+                        break;
+                    case 'kp':
+                        if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
+                        valueHtml = val; break;
+                    case 'wind':
+                         if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
+                         valueHtml = val; break;
+                    case 'sfi':
+                        if(numVal < 70) boxClass = 'c-warn';
+                        valueHtml = val; break;
+                    default: valueHtml = val; break;
+                }
+                el.innerHTML = valueHtml + trendHtml;
+                if(box) box.className = 'box ' + boxClass;
+            } catch(e){}
+        }
+
+        // 3. INDEPENDENT FETCH ENGINE
+        async function fetchData(url, type) {
+            // Try Proxy 1
+            try {
+                let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url + '?t=' + Date.now()));
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
+            } catch(e) {}
+            
+            // Try Proxy 2
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
+            } catch(e) {}
+            
+            return null;
+        }
+
+        // Fire & Forget Functions
+        async function loadSFI() {
+            try {
+                let txt = await fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text');
+                if(txt) {
+                    let lines = txt.trim().split('\n');
+                    let curr=null, prev=null;
+                    for(let i=lines.length-1; i>=0; i--) {
+                        if(lines[i].trim().startsWith('20')) {
+                            let c = lines[i].trim().split(/\s+/);
+                            if(!curr) curr = c; else { prev = c; break; }
+                        }
+                    }
+                    if(curr) {
+                        let sfi = parseInt(curr[3]);
+                        set('sfi', sfi, 0);
+                        set('ssn', parseInt(curr[4]), 0);
+                        runNVISModule(sfi, 2); // Default Kp=2 until loaded
+                        log('SFI Loaded');
+                    }
+                }
+            } catch(e) { console.log('SFI Fail'); }
+        }
+
+        async function loadMag() {
+            try {
+                let mag = await fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json');
+                if(mag && mag.length>2) {
+                    let l=mag[mag.length-1]; let p=mag[mag.length-2];
+                    set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
+                    set('bt', parseFloat(l[6]).toFixed(1), 0);
+                    log('Mag Loaded');
+                }
+            } catch(e) { console.log('Mag Fail'); }
+        }
+
+        async function loadPlas() {
+            try {
+                let plas = await fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json');
+                if(plas && plas.length>2) {
+                    let l=plas[plas.length-1];
+                    set('den', Math.round(parseFloat(l[1])), 0); 
+                    set('wind', Math.round(parseFloat(l[2])), 0); 
+                    log('Plas Loaded');
+                }
+            } catch(e) { console.log('Plas Fail'); }
+        }
+
+        async function loadKp() {
+            try {
+                let kp = await fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json');
+                if(kp && kp.length>2) {
+                    let l=kp[kp.length-1];
+                    let kpv = parseFloat(l[1]);
+                    set('kp', kpv.toFixed(2), 0);
+                    let cond = document.getElementById('hf-cond');
+                    if(kpv >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+                    else { cond.innerText = "NORMAL OPS"; cond.style.color = "var(--green)"; }
+                    log('Kp Loaded');
+                }
+            } catch(e) { console.log('Kp Fail'); }
+        }
+
+        async function loadDst() {
+            try {
+                let dst = await fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json');
+                if(dst && dst.length>2) {
+                    let l=dst[dst.length-1]; let p=dst[dst.length-2];
+                    set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
+                    log('Dst Loaded');
+                }
+            } catch(e) { console.log('Dst Fail'); }
+        }
+
+        function runAll() {
+            loadSFI();
+            loadMag();
+            loadPlas();
+            loadKp();
+            loadDst();
+        }
+
+        function runNVISModule(sfi, kp) {
+            try { 
+                if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
+                let foF2 = 2.0 + (sfi * 0.04); if(!isDay) foF2*=0.55; if(kp>=4) foF2*=0.85;
+                let t="", c="#fff"; 
+                if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} 
+                else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} 
+                else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} 
+                else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} 
+                else{t="NO NVIS / BLACKOUT";c="#888";}
+                document.getElementById('nvis-result').innerText=t; document.getElementById('nvis-result').style.color=c;
+                document.getElementById('nvis-fof2').innerText=foF2.toFixed(2)+" MHz"; document.getElementById('nvis-logic').innerText=isDay?"Day":"Night";
+            } catch(e){}
+        }
+
+        window.onload = function() { 
+            setInterval(updateClock, 1000); updateClock(); 
+            runAll(); 
+            setInterval(runAll, 60000); 
+        };
+    </script>
+</body>
+</html>
