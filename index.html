@@ -11,33 +11,30 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V122.0 (Ironclad Logic)</title>
+    <title>IonosTek Monitor V125.0 (Perfect Clone)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. GLOBAL RESET --- */
+        /* --- CSS FROM ORIGINAL V90.0 + FIXES --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
-            --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
+            --red: #ff1744; --blue: #2979ff; 
+            --purple: #d500f9;
         }
-        
         body { 
             font-family: 'Chakra Petch', sans-serif; 
             background: var(--bg); color: var(--text); 
-            margin: 0; padding: 0; 
-            overflow-x: hidden;
+            margin: 0; padding: 0; overflow-x: hidden;
             user-select: none; -webkit-user-select: none;
-            min-height: 100vh;
-            padding-bottom: 50px;
+            min-height: 100vh; padding-bottom: 50px;
         }
         
-        /* --- 2. NAV --- */
+        /* Nav */
         .ionos-nav {
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
-            height: 60px; position: relative; z-index: 100;
+            height: 60px;
         }
         .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.2em; letter-spacing: 1px; }
         
@@ -48,53 +45,43 @@
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* --- 3. CONTAINER --- */
-        .container { padding: 20px; max-width: 1600px; margin: 0 auto; display: block; position: relative; z-index: 1; }
-
+        /* Layout */
+        .container { padding: 20px; max-width: 1600px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         h1 { margin: 0; font-weight: 700; font-size: 1.8em; }
         
         .clock-box { text-align: right; }
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
-        .local-time { font-size: 0.9em; color: #888; margin-top: 5px; }
+        .local-time { font-size: 0.9em; color: #888; margin-top: 4px; }
         
-        /* Active Dot Pulse */
-        @keyframes pulse { 
-            0% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
-            50% { opacity: 0.4; text-shadow: none; transform: scale(0.9); } 
-            100% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
-        }
+        /* System Active (Fade like original) */
+        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
-        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: pulse 1.5s infinite ease-in-out; }
+        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: fade 2s infinite; }
 
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* --- 4. STATS GRID (8 COLS FIXED) --- */
-        .stats { 
-            display: grid; 
-            grid-template-columns: repeat(8, 1fr); 
-            gap: 10px; margin-bottom: 20px; width: 100%; 
-        }
-        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
+        /* Stats Grid (8 Cols) */
+        .stats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-bottom: 20px; width: 100%; }
+        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; transition: transform 0.2s; }
+        
         .val { font-size: 1.8em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; white-space: nowrap; }
         .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
-        /* --- ARROW STYLES & ANIMATION --- */
-        @keyframes arrow-pulse { 
-            0%, 100% { opacity: 1; transform: scale(1); } 
-            50% { opacity: 0.6; transform: scale(0.9); } 
-        }
-        
+        /* Arrows (Unicode Bold) */
+        /* ลูกศรซ้าย (Status) */
         .status-arrow { 
-            font-size: 0.9em; margin-right: 5px; vertical-align: middle; display: inline-block; margin-top: -3px; font-weight: bold;
-            animation: arrow-pulse 2s infinite ease-in-out; /* กระพริบ */
-        } 
+            font-size: 1em; margin-right: 8px; display: inline-block; margin-top: -3px; 
+            font-weight: 900; /* หนาพิเศษ */
+        }
+        /* ลูกศรขวา (Trend) */
+        @keyframes arrow-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
         .trend-arrow { 
-            font-size: 0.6em; margin-left: 8px; vertical-align: middle; display: inline-block; margin-top: -5px; 
-            animation: arrow-pulse 2s infinite ease-in-out; /* กระพริบ */
-        } 
+            font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle;
+            animation: arrow-bounce 2s infinite; /* เด้งดึ๋งเหมือน V90.0 */
+        }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -102,13 +89,12 @@
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
         
-        /* --- 5. NVIS --- */
-        .nvis-panel { background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%); border: 1px solid #333; border-left: 4px solid var(--purple); padding: 10px 15px; margin-bottom: 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
+        /* NVIS & Maps */
+        .nvis-panel { background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%); border: 1px solid #333; border-left: 4px solid var(--purple); padding: 12px 20px; margin-bottom: 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .nvis-main { display: flex; align-items: center; }
         .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; font-size: 1.1em; }
         .nvis-sub { font-size: 0.9em; text-align: right; }
 
-        /* --- 6. MAPS --- */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; }
         .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; }
         .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
@@ -116,18 +102,16 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. OVERLAYS (SAFE INLINE STYLE) --- */
-        /* สำคัญ: ใช้ CSS นี้เป็น Base แต่ตอนเปิดปิดจะใช้ Inline Style ทับ */
+        /* Overlay / Modal / Lightbox */
         .overlay {
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 10000; 
-            align-items: center; justify-content: center;
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center;
         }
+        .overlay.show { display: flex; }
 
         #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
         
-        .m-content { background: var(--card); padding: 40px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
+        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 35px; color: #888; cursor: pointer; }
         .close-btn:hover { color: #fff; }
 
@@ -227,11 +211,11 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V122.0 • Ironclad Logic</span>
+            <span style="color:#666;">V125.0 • Perfect Clone</span>
         </div>
     </div>
 
-    <div id="guideModal" class="overlay" style="display: none !important;" onclick="toggleOverlay('guideModal')">
+    <div id="guideModal" class="overlay" onclick="toggleOverlay('guideModal')">
         <div class="m-content" onclick="event.stopPropagation()">
             <span class="close-btn" onclick="toggleOverlay('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
@@ -247,13 +231,15 @@
         </div>
     </div>
 
-    <div id="lightbox" class="overlay" style="display: none !important;" onclick="toggleOverlay('lightbox')">
+    <div id="lightbox" class="overlay" onclick="toggleOverlay('lightbox')">
         <img id="lb-img" src="">
     </div>
 
     <script>
+        // 1. Anti-Copy
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
+        // 2. Clock
         function updateClock() {
             try {
                 const d = new Date();
@@ -267,23 +253,26 @@
             } catch(e){}
         }
 
-        // UI HELPERS (TOGGLE STYLE)
+        // 3. Popup Logic (Click to Open, Click to Close)
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
-            lb.style.setProperty('display', 'flex', 'important');
+            lb.classList.add('show');
         }
-
+        
         function toggleOverlay(id) {
             let el = document.getElementById(id);
-            // เช็คจาก Style จริงๆ ไม่ใช่ Class
-            if (el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
-            else el.style.setProperty('display', 'flex', 'important');
+            // สลับ Class show
+            if (el.classList.contains('show')) {
+                el.classList.remove('show');
+            } else {
+                el.classList.add('show');
+            }
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- LOGIC ENGINE (V120 + V117 PULSE) ---
+        // 4. Data Engine (Logic from Original V90)
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -292,19 +281,30 @@
                 let numVal = parseFloat(val);
                 if(isNaN(numVal)) { el.innerText = val; return; }
 
-                let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
+                let boxClass = 'c-norm'; 
+                let valueHtml = val;
+                let trendHtml = '';
 
-                // 1. Trend Arrow (เฉพาะ DST, BZ) + Pulse
-                if(['dst', 'bz'].includes(id) && diff !== 0) {
-                    let tColor = (diff > 0) ? 'var(--green)' : 'var(--red)';
-                    if(['dst', 'bz'].includes(id)) tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
+                // Trend Arrow (ลูกศรขวา) - มีทุกตัว
+                if(diff !== 0) {
+                    let tColor = 'var(--green)'; // Default Good
                     let tSymbol = (diff > 0) ? '▲' : '▼';
+                    
+                    // Logic สีของ Trend Arrow
+                    if(['kp', 'wind', 'den'].includes(id)) {
+                        // ค่ายิ่งมากยิ่งแย่
+                        tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
+                    } else {
+                        // ค่ายิ่งน้อยยิ่งแย่ (SFI, SSN, BZ, DST, BT)
+                        tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
+                    }
                     trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
                 }
 
+                // Symbols (Unicode Bold)
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
-                // 2. Status Arrow + Logic + Pulse
+                // Status Arrow (ลูกศรซ้าย) - เฉพาะ BZ, DST, BT
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
@@ -315,41 +315,38 @@
 
                     case 'dst':
                         let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
-                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
-                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
-                        if(numVal <= -20) valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
-                        else valueHtml = val;
+                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`; }
+                        else if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`; }
+                        else { valueHtml = val; } // ปกติไม่มีลูกศรซ้าย
                         break;
                     
                     case 'bt':
+                        // BT: มีลูกศรซ้ายเขียวเสมอ (ตามภาพต้นฉบับ)
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
                         break;
 
-                    case 'kp':
-                        if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
-                        valueHtml = val; break;
-                    case 'wind':
-                         if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
-                         valueHtml = val; break;
-                    case 'sfi':
-                        if(numVal < 70) boxClass = 'c-warn';
-                        valueHtml = val; break;
-                    default: valueHtml = val; break;
+                    // กลุ่มไม่มีลูกศรซ้าย (ตามภาพต้นฉบับ)
+                    case 'kp': if(numVal >= 4) boxClass='c-warn'; if(numVal >= 5) boxClass='c-alert'; valueHtml=val; break;
+                    case 'wind': if(numVal >= 500) boxClass='c-warn'; if(numVal >= 800) boxClass='c-alert'; valueHtml=val; break;
+                    case 'sfi': if(numVal < 70) boxClass='c-warn'; valueHtml=val; break;
+                    default: valueHtml=val; break;
                 }
+
                 el.innerHTML = valueHtml + trendHtml;
                 if(box) box.className = 'box ' + boxClass;
+
             } catch(e){}
         }
 
-        // FETCHING (ROBUST)
+        // 5. Fetching (Turbo)
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
-                if(r.ok) { return type === 'json' ? await r.json() : await r.text(); }
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
             try {
                 let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
-                if(r.ok) { return type === 'json' ? await r.json() : await r.text(); }
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
             return null;
         }
@@ -407,26 +404,4 @@
 
             if(dstData && dstData.length>2) { 
                 let l=dstData[dstData.length-1]; let p=dstData[dstData.length-2]; 
-                set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
-            }
-
-            let cond = document.getElementById('hf-cond');
-            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
-            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
-            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
-            log('System Active'); runNVISModule(sfiVal, kpVal);
-        }
-
-        function runNVISModule(sfi, kp) {
-            try { if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
-                let foF2 = 2.0 + (sfi * 0.04); if(!isDay) foF2*=0.55; if(kp>=4) foF2*=0.85;
-                let t="", c="#fff"; if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} else{t="NO NVIS / BLACKOUT";c="#888";}
-                document.getElementById('nvis-result').innerText=t; document.getElementById('nvis-result').style.color=c;
-                document.getElementById('nvis-fof2').innerText=foF2.toFixed(2)+" MHz"; document.getElementById('nvis-logic').innerText=isDay?"Day":"Night";
-            } catch(e){}
-        }
-
-        window.onload = function() { setInterval(updateClock, 1000); updateClock(); updateAll(); setInterval(updateAll, 60000); };
-    </script>
-</body>
-</html>
+                set('dst', parseInt(l[1]), parseInt(l
