@@ -1,26 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CTWQCML9WQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CTWQCML9WQ');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V125.0 (Perfect Clone)</title>
+    <title>IonosTek Monitor V126.0 (Resurrection)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS FROM ORIGINAL V90.0 + FIXES --- */
+        /* --- CSS V125 (PERFECT CLONE) --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
-            --red: #ff1744; --blue: #2979ff; 
-            --purple: #d500f9;
+            --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
         }
         body { 
             font-family: 'Chakra Petch', sans-serif; 
@@ -30,7 +21,6 @@
             min-height: 100vh; padding-bottom: 50px;
         }
         
-        /* Nav */
         .ionos-nav {
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
@@ -45,7 +35,6 @@
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* Layout */
         .container { padding: 20px; max-width: 1600px; margin: 0 auto; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         h1 { margin: 0; font-weight: 700; font-size: 1.8em; }
@@ -54,7 +43,6 @@
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
         .local-time { font-size: 0.9em; color: #888; margin-top: 4px; }
         
-        /* System Active (Fade like original) */
         @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
         .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: fade 2s infinite; }
@@ -62,7 +50,6 @@
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* Stats Grid (8 Cols) */
         .stats { display: grid; grid-template-columns: repeat(8, 1fr); gap: 10px; margin-bottom: 20px; width: 100%; }
         .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; transition: transform 0.2s; }
         
@@ -70,18 +57,9 @@
         .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
-        /* Arrows (Unicode Bold) */
-        /* ลูกศรซ้าย (Status) */
-        .status-arrow { 
-            font-size: 1em; margin-right: 8px; display: inline-block; margin-top: -3px; 
-            font-weight: 900; /* หนาพิเศษ */
-        }
-        /* ลูกศรขวา (Trend) */
+        .status-arrow { font-size: 1em; margin-right: 8px; display: inline-block; margin-top: -3px; font-weight: 900; }
         @keyframes arrow-bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
-        .trend-arrow { 
-            font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle;
-            animation: arrow-bounce 2s infinite; /* เด้งดึ๋งเหมือน V90.0 */
-        }
+        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-bounce 2s infinite; }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -89,7 +67,6 @@
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
         
-        /* NVIS & Maps */
         .nvis-panel { background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%); border: 1px solid #333; border-left: 4px solid var(--purple); padding: 12px 20px; margin-bottom: 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .nvis-main { display: flex; align-items: center; }
         .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; font-size: 1.1em; }
@@ -100,21 +77,15 @@
         .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
         .c-body { background: #000; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
-        .c-body img:hover { opacity: 0.8; }
-
-        /* Overlay / Modal / Lightbox */
-        .overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center;
-        }
+        
+        /* Popup & Modal */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center; }
         .overlay.show { display: flex; }
-
-        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; cursor: pointer; }
         
         .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
         .close-btn { position: absolute; top: 10px; right: 15px; font-size: 35px; color: #888; cursor: pointer; }
-        .close-btn:hover { color: #fff; }
-
+        
         .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.8em; color: #444; border-top: 1px solid #222; padding-top: 20px; }
         #fetch-log { color: var(--orange); font-family: monospace; }
         .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; margin-left: 10px; }
@@ -191,16 +162,8 @@
 
         <div class="grid">
             <div class="card" style="border-color: var(--purple);">
-                <div class="c-head">
-                    <span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> 
-                    <span>SWS/AU</span>
-                </div>
-                <div class="c-body">
-                    <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
-                         referrerpolicy="no-referrer" 
-                         onclick="openLightbox(this.src)" 
-                         onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'">
-                </div>
+                <div class="c-head"><span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> <span>SWS/AU</span></div>
+                <div class="c-body"><img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" referrerpolicy="no-referrer" onclick="openLightbox(this.src)" onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'"></div>
             </div>
             <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
             <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
@@ -211,7 +174,7 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V125.0 • Perfect Clone</span>
+            <span style="color:#666;">V126.0 • Resurrection</span>
         </div>
     </div>
 
@@ -231,15 +194,11 @@
         </div>
     </div>
 
-    <div id="lightbox" class="overlay" onclick="toggleOverlay('lightbox')">
-        <img id="lb-img" src="">
-    </div>
+    <div id="lightbox" class="overlay" onclick="toggleOverlay('lightbox')"><img id="lb-img" src=""></div>
 
     <script>
-        // 1. Anti-Copy
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
-        // 2. Clock
         function updateClock() {
             try {
                 const d = new Date();
@@ -253,26 +212,20 @@
             } catch(e){}
         }
 
-        // 3. Popup Logic (Click to Open, Click to Close)
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
             lb.classList.add('show');
         }
-        
+
         function toggleOverlay(id) {
             let el = document.getElementById(id);
-            // สลับ Class show
-            if (el.classList.contains('show')) {
-                el.classList.remove('show');
-            } else {
-                el.classList.add('show');
-            }
+            if(el.classList.contains('show')) el.classList.remove('show');
+            else el.classList.add('show');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // 4. Data Engine (Logic from Original V90)
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -281,30 +234,18 @@
                 let numVal = parseFloat(val);
                 if(isNaN(numVal)) { el.innerText = val; return; }
 
-                let boxClass = 'c-norm'; 
-                let valueHtml = val;
-                let trendHtml = '';
+                let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
-                // Trend Arrow (ลูกศรขวา) - มีทุกตัว
                 if(diff !== 0) {
-                    let tColor = 'var(--green)'; // Default Good
+                    let tColor = 'var(--green)';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
+                    else tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
                     let tSymbol = (diff > 0) ? '▲' : '▼';
-                    
-                    // Logic สีของ Trend Arrow
-                    if(['kp', 'wind', 'den'].includes(id)) {
-                        // ค่ายิ่งมากยิ่งแย่
-                        tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
-                    } else {
-                        // ค่ายิ่งน้อยยิ่งแย่ (SFI, SSN, BZ, DST, BT)
-                        tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
-                    }
                     trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
                 }
 
-                // Symbols (Unicode Bold)
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
-                // Status Arrow (ลูกศรซ้าย) - เฉพาะ BZ, DST, BT
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
@@ -312,96 +253,130 @@
                         if(numVal < 0) boxClass = 'c-warn'; if(numVal <= -5) boxClass = 'c-alert'; 
                         valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
-
                     case 'dst':
                         let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
-                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`; }
-                        else if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`; }
-                        else { valueHtml = val; } // ปกติไม่มีลูกศรซ้าย
+                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
+                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
+                        if(numVal <= -20) valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
+                        else valueHtml = val;
                         break;
-                    
                     case 'bt':
-                        // BT: มีลูกศรซ้ายเขียวเสมอ (ตามภาพต้นฉบับ)
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
                         break;
-
-                    // กลุ่มไม่มีลูกศรซ้าย (ตามภาพต้นฉบับ)
-                    case 'kp': if(numVal >= 4) boxClass='c-warn'; if(numVal >= 5) boxClass='c-alert'; valueHtml=val; break;
-                    case 'wind': if(numVal >= 500) boxClass='c-warn'; if(numVal >= 800) boxClass='c-alert'; valueHtml=val; break;
-                    case 'sfi': if(numVal < 70) boxClass='c-warn'; valueHtml=val; break;
-                    default: valueHtml=val; break;
+                    case 'kp':
+                        if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
+                        valueHtml = val; break;
+                    case 'wind':
+                         if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
+                         valueHtml = val; break;
+                    case 'sfi':
+                        if(numVal < 70) boxClass = 'c-warn';
+                        valueHtml = val; break;
+                    default: valueHtml = val; break;
                 }
-
                 el.innerHTML = valueHtml + trendHtml;
                 if(box) box.className = 'box ' + boxClass;
-
             } catch(e){}
         }
 
-        // 5. Fetching (Turbo)
-        async function fetchData(url, type) {
+        // --- ENGINE: Multi-Path Fetching ---
+        async function fetchAny(url, type) {
+            // Path 1: CorsProxy.io (เร็วสุด)
+            try {
+                let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url + '?t=' + Date.now()));
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
+            } catch(e) {}
+
+            // Path 2: AllOrigins (สำรอง 1)
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
                 if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
+
+            // Path 3: CodeTabs (สำรอง 2 - ช้าแต่ชัวร์)
             try {
-                let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
+                let r = await fetch('https://api.codetabs.com/v1/proxy?quest=' + encodeURIComponent(url));
                 if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
+
             return null;
         }
 
         async function updateAll() {
             log('Syncing...');
-            const results = await Promise.allSettled([
-                fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text'),
-                fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json'),
-                fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json'),
-                fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json'),
-                fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json')
-            ]);
-
-            const txt = results[0].status === 'fulfilled' ? results[0].value : null;
-            const mag = results[1].status === 'fulfilled' ? results[1].value : null;
-            const plas = results[2].status === 'fulfilled' ? results[2].value : null;
-            const kpData = results[3].status === 'fulfilled' ? results[3].value : null;
-            const dstData = results[4].status === 'fulfilled' ? results[4].value : null;
-
-            let sfiVal=70, kpVal=2;
-
-            if(txt) {
-                let lines = txt.trim().split('\n');
-                let curr=null, prev=null;
-                for(let i=lines.length-1; i>=0; i--) {
-                    if(lines[i].trim().startsWith('20')) {
-                        let c = lines[i].trim().split(/\s+/);
-                        if(!curr) curr = c; else { prev = c; break; }
+            
+            // 1. SFI (Text)
+            fetchAny('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text').then(txt => {
+                if(txt) {
+                    let lines = txt.trim().split('\n');
+                    let curr=null, prev=null;
+                    for(let i=lines.length-1; i>=0; i--) {
+                        if(lines[i].trim().startsWith('20')) {
+                            let c = lines[i].trim().split(/\s+/);
+                            if(!curr) curr = c; else { prev = c; break; }
+                        }
+                    }
+                    if(curr) {
+                        let sfi = parseInt(curr[3]); 
+                        set('sfi', sfi, prev ? sfi - parseInt(prev[3]) : 0);
+                        set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
+                        runNVISModule(sfi, 2);
                     }
                 }
-                if(curr) {
-                    sfiVal = parseInt(curr[3]); 
-                    set('sfi', sfiVal, prev ? sfiVal - parseInt(prev[3]) : 0);
-                    set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
+            });
+
+            // 2. Mag
+            fetchAny('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json').then(mag => {
+                if(mag && mag.length>2) {
+                    let l=mag[mag.length-1]; let p=mag[mag.length-2];
+                    set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
+                    set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
                 }
-            }
+            });
 
-            if(mag && mag.length>2) { 
-                let l=mag[mag.length-1]; let p=mag[mag.length-2];
-                set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
-                set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
-            }
+            // 3. Plasma
+            fetchAny('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json').then(plas => {
+                if(plas && plas.length>2) {
+                    let l=plas[plas.length-1]; let p=plas[plas.length-2];
+                    set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
+                    set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
+                }
+            });
 
-            if(plas && plas.length>2) { 
-                let l=plas[plas.length-1]; let p=plas[plas.length-2];
-                set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
-                set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
-            }
+            // 4. Kp
+            fetchAny('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json').then(kp => {
+                if(kp && kp.length>2) {
+                    let l=kp[kp.length-1]; let p=kp[kp.length-2];
+                    let kpv = parseFloat(l[1]);
+                    set('kp', kpv.toFixed(2), kpv-parseFloat(p[1]));
+                    
+                    let cond = document.getElementById('hf-cond');
+                    if(kpv >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+                    else { cond.innerText = "NORMAL OPS"; cond.style.color = "var(--green)"; }
+                }
+            });
 
-            if(kpData && kpData.length>2) { 
-                let l=kpData[kpData.length-1]; let p=kpData[kpData.length-2]; 
-                kpVal=parseFloat(l[1]); set('kp', kpVal.toFixed(2), kpVal-parseFloat(p[1])); 
-            }
+            // 5. Dst
+            fetchAny('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json').then(dst => {
+                if(dst && dst.length>2) {
+                    let l=dst[dst.length-1]; let p=dst[dst.length-2];
+                    set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
+                }
+            });
 
-            if(dstData && dstData.length>2) { 
-                let l=dstData[dstData.length-1]; let p=dstData[dstData.length-2]; 
-                set('dst', parseInt(l[1]), parseInt(l
+            log('System Active');
+        }
+
+        function runNVISModule(sfi, kp) {
+            try { if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
+                let foF2 = 2.0 + (sfi * 0.04); if(!isDay) foF2*=0.55; if(kp>=4) foF2*=0.85;
+                let t="", c="#fff"; if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} else{t="NO NVIS / BLACKOUT";c="#888";}
+                document.getElementById('nvis-result').innerText=t; document.getElementById('nvis-result').style.color=c;
+                document.getElementById('nvis-fof2').innerText=foF2.toFixed(2)+" MHz"; document.getElementById('nvis-logic').innerText=isDay?"Day":"Night";
+            } catch(e){}
+        }
+
+        window.onload = function() { setInterval(updateClock, 1000); updateClock(); updateAll(); setInterval(updateAll, 60000); };
+    </script>
+</body>
+</html>
