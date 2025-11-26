@@ -11,7 +11,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V120.0 (Logic Precision)</title>
+    <title>IonosTek Monitor V121.0 (Network Buster)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL RESET --- */
@@ -79,17 +79,10 @@
         .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
-        /* Arrow Animation (Pulse for Update Status) */
-        @keyframes arrow-anim { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.95); } }
-        
-        .status-arrow { 
-            font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: bold; 
-            animation: arrow-anim 1.5s infinite; /* กระพริบเพื่อแสดงสถานะ */
-        } 
-        .trend-arrow { 
-            font-size: 0.6em; margin-left: 8px; display: inline-block; vertical-align: middle; margin-top: -5px; 
-            animation: arrow-anim 1.5s infinite; /* กระพริบเพื่อแสดงการอัพเดท */
-        } 
+        /* Arrow Animation */
+        @keyframes arrow-anim { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.9); } }
+        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: bold; animation: arrow-anim 1.5s infinite; } 
+        .trend-arrow { font-size: 0.6em; margin-left: 5px; display: inline-block; margin-top: -5px; animation: arrow-anim 1.5s infinite; } 
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -137,141 +130,4 @@
 
         @media (max-width: 1200px) { .stats { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 600px) { 
-            .header { flex-direction: column; text-align: center; gap:15px; } 
-            .stats { grid-template-columns: repeat(2, 1fr); } 
-            .clock-box { text-align: center; }
-            .ionos-nav { flex-direction: column; gap: 10px; height: auto; padding-bottom: 15px; }
-            .nvis-panel { flex-direction: column; text-align: center; gap: 10px; }
-            .nvis-sub { width: 100%; border-top: 1px solid #333; padding-top: 10px; }
-        }
-    </style>
-</head>
-<body oncontextmenu="return false;">
-
-    <nav class="ionos-nav">
-        <a href="#" class="nav-brand"><span class="blink-symbol">></span> IONOSTEK.COM</a>
-        <div class="nav-links">
-            <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
-            <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
-            <a onclick="updateAll()">[ REFRESH ]</a>
-        </div>
-    </nav>
-
-    <div class="container">
-        <div class="header">
-            <div>
-                <h1>IONOSTEK <span style="color:#fff">MONITOR</span></h1>
-                <div class="sys-active"><span class="sys-dot">●</span> System Active</div>
-            </div>
-            <div class="clock-box">
-                <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
-                <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleOverlay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
-            </div>
-        </div>
-
-        <div class="stats">
-            <div class="box" id="b-sfi"><div class="lbl">SFI</div><div class="val" id="v-sfi">--</div><span class="unit">F10.7cm</span></div>
-            <div class="box" id="b-ssn"><div class="lbl">SSN</div><div class="val" id="v-ssn">--</div><span class="unit">Count</span></div>
-            <div class="box" id="b-kp"><div class="lbl">Kp</div><div class="val" id="v-kp">--</div><span class="unit">Index</span></div>
-            <div class="box" id="b-dst"><div class="lbl">Dst</div><div class="val" id="v-dst">--</div><span class="unit">nT</span></div>
-            <div class="box" id="b-bz"><div class="lbl">Bz</div><div class="val" id="v-bz">--</div><span class="unit">nT</span></div>
-            <div class="box" id="b-bt"><div class="lbl">Bt</div><div class="val" id="v-bt">--</div><span class="unit">nT</span></div>
-            <div class="box" id="b-wind"><div class="lbl">Wind</div><div class="val" id="v-wind">--</div><span class="unit">km/s</span></div>
-            <div class="box" id="b-den"><div class="lbl">Den</div><div class="val" id="v-den">--</div><span class="unit">p/cm³</span></div>
-        </div>
-
-        <div class="hf-banner">
-            <span style="color:#888; margin-right:10px; font-size:0.9em;">HF ESTIMATE:</span>
-            <span id="hf-cond" style="font-weight:bold;">INITIALIZING...</span>
-        </div>
-
-        <div class="nvis-panel">
-            <div class="nvis-main">
-                <span class="nvis-icon">⚡ NVIS TACTICAL:</span>
-                <span id="nvis-result" style="font-weight:bold; color:#fff">WAITING DATA...</span>
-            </div>
-            <div class="nvis-sub">
-                <span style="color:#888">Est. foF2:</span> <span id="nvis-fof2" style="color:var(--green)">-- MHz</span>
-                <span style="color:#444; margin:0 5px">|</span>
-                <span style="color:#888">Logic:</span> <span id="nvis-logic">Auto</span>
-            </div>
-        </div>
-
-        <div class="grid">
-            <div class="card" style="border-color: var(--purple);">
-                <div class="c-head">
-                    <span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> 
-                    <span>SWS/AU</span>
-                </div>
-                <div class="c-body">
-                    <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
-                         referrerpolicy="no-referrer" 
-                         onclick="openLightbox(this.src)" 
-                         onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'">
-                </div>
-            </div>
-            <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
-            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="openLightbox(this.src)"></div></div>
-        </div>
-
-        <div class="footer">
-            <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V120.0 • Logic Precision</span>
-        </div>
-    </div>
-
-    <div id="guideModal" class="overlay" onclick="toggleOverlay('guideModal')">
-        <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="toggleOverlay('guideModal')">&times;</span>
-            <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
-            <div class="guide-sec">
-                <div class="guide-h">★ Understanding Bz (The Switch)</div>
-                <div class="guide-p"><span class="hl-g">Bz Positive (+): "SWITCH CLOSED"</span><br>Shields UP. HF Quiet.</div>
-                <div class="guide-p"><span class="hl-r">Bz Negative (-): "SWITCH OPEN"</span><br>Shields DOWN. Storm Alert!</div>
-            </div>
-            <div>
-                <div class="guide-h">★ Reading Values</div>
-                <div class="guide-p"><span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br><b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable</div>
-            </div>
-        </div>
-    </div>
-
-    <div id="lightbox" class="overlay" onclick="toggleOverlay('lightbox')">
-        <img id="lb-img" src="">
-    </div>
-
-    <script>
-        // Anti-Copy
-        document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
-
-        function updateClock() {
-            try {
-                const d = new Date();
-                if(document.getElementById('u-h')) {
-                    document.getElementById('u-h').innerText = d.getUTCHours().toString().padStart(2,'0');
-                    document.getElementById('u-m').innerText = d.getUTCMinutes().toString().padStart(2,'0');
-                    const lH = d.getHours().toString().padStart(2,'0');
-                    const lM = d.getMinutes().toString().padStart(2,'0');
-                    document.getElementById('local-clock').innerText = `${lH}:${lM} Local`;
-                }
-            } catch(e){}
-        }
-
-        // UI Helpers
-        function openLightbox(src) {
-            let lb = document.getElementById('lightbox');
-            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
-            lb.classList.add('show');
-        }
-
-        function toggleOverlay(id) {
-            let el = document.getElementById(id);
-            if (el.classList.contains('show')) el.classList.remove('show');
-            else el.classList.add('show');
-        }
-        
-        function log(msg)
+            .header { flex-direction: column; text-align: center; gap:15px; }
