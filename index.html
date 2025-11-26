@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V94.0 (Universal Fix)</title>
+    <title>IonosTek Monitor V94.1 (Cmd Blink)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- GLOBAL RESET & SETTINGS --- */
-        * { box-sizing: border-box; } /* สำคัญมาก: ป้องกัน layout พัง */
+        * { box-sizing: border-box; }
         
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
@@ -31,7 +31,24 @@
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; }
+
+        /* --- COMMAND PROMPT BLINK EFFECT --- */
+        @keyframes cmd-blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+        .nav-brand { 
+            color: var(--green); 
+            text-decoration: none; 
+            font-weight: bold; 
+            font-size: 1.1em; 
+            letter-spacing: 1px;
+            /* Apply the blink animation */
+            animation: cmd-blink 1s step-end infinite;
+        }
+        /* ------------------------------------ */
+
         .nav-links { display: flex; gap: 15px; }
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
@@ -40,7 +57,7 @@
         .container { 
             position: relative; z-index: 1;
             padding: 15px; max-width: 1600px; margin: 0 auto; 
-            display: block !important; /* บังคับแสดงผล */
+            display: block !important;
         }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
@@ -57,14 +74,13 @@
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
             gap: 10px; margin-bottom: 20px; 
-            width: 100%; /* เต็มความกว้าง */
+            width: 100%;
         }
         .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
         .val { font-size: 2.0em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
         .lbl { font-size: 0.8em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.7em; color: #666; display: block; margin-top: -5px; }
         
-        /* Colors */
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
         .c-alert { border-top-color: var(--red) !important; color: var(--red); }
@@ -97,7 +113,7 @@
 
         /* --- LIGHTBOX (Safe Mode: Layer 9999) --- */
         #lightbox { 
-            display: none; /* เริ่มต้นปิด */
+            display: none;
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
             z-index: 9999; 
@@ -209,7 +225,7 @@
                 <span id="fetch-log">System Ready</span>
                 <button class="btn-retry" onclick="updateAll()">REFRESH</button>
             </div>
-            <span style="color:#666;">V94.0 • Universal Fix</span>
+            <span style="color:#666;">V94.1 • Cmd Blink</span>
         </div>
     </div>
 
@@ -255,7 +271,7 @@
         function view(src) { 
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
-            lb.classList.add('active'); // เพิ่ม class แทนการแก้ style ตรงๆ
+            lb.classList.add('active'); 
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
