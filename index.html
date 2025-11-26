@@ -3,47 +3,254 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V90.4 (Stable SEA)</title>
-    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>IonosTek Monitor V90.5 (Rescue)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* --- CORE CSS V90.4 --- */
-        :root { 
-            --bg: #0b0b0b; --card: #141414; --text: #e0e0e0; 
-            --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
-            --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
+        /* --- CORE CSS V90.5 --- */
+        body {
+            background-color: #0b0b0b;
+            color: #e0e0e0;
+            font-family: 'Chakra Petch', sans-serif;
+            margin: 0; padding: 0;
+            overflow-x: hidden;
         }
-        body { 
-            font-family: 'Chakra Petch', sans-serif; 
-            background: var(--bg); 
-            color: var(--text); 
-            margin: 0; padding: 0; user-select: none; 
-            overflow-x: hidden; /* Prevent horizontal scroll */
-        }
-        
-        /* Navigation */
+
+        /* Nav */
         .ionos-nav {
-            background-color: #000; border-bottom: 1px solid #333;
+            background: #000; border-bottom: 1px solid #333;
             padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; font-size: 1.1em; }
-        .nav-links a { color: #888; text-decoration: none; font-weight: 600; font-size: 0.9em; margin-left: 15px; cursor: pointer; }
-        .nav-links a:hover { color: #fff; }
+        .nav-brand { color: #00e676; font-weight: bold; text-decoration: none; font-size: 1.1em; }
+        .nav-brand span { color: #d500f9; font-size: 0.8em; margin-left: 5px; }
+        .nav-btn { color: #888; cursor: pointer; font-size: 0.9em; text-decoration: none; }
 
-        .container { padding: 15px; max-width: 1600px; margin: 0 auto; }
+        .container { padding: 15px; max-width: 1200px; margin: 0 auto; }
 
         /* Header */
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
-        h1 { margin: 0; font-weight: 700; font-size: 1.8em; letter-spacing: 1px; }
-        
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
         .clock-box { text-align: right; }
-        .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
-        .local-time { font-size: 0.85em; color: #888; margin-top: 4px; font-weight: 500; }
-        
-        .sys-status { font-size: 0.8em; color: #666; margin-top: 5px; }
-        .dot { color: var(--green); animation: blink 2s infinite; }
-        @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+        .utc-time { font-size: 1.6em; font-weight: bold; color: #2979ff; }
+        .local-time { font-size: 0.9em; color: #777; }
 
-        /* Stats Grid (6 Boxes) */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .box { background: var(--card); padding: 12px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
-        .val { font-size: 1
+        /* Stats Box */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 10px; margin-bottom: 20px; }
+        .stat-box { background: #161616; padding: 10px; border-radius: 5px; text-align: center; border-top: 3px solid #444; }
+        .stat-val { font-size: 1.6em; font-weight: bold; color: #fff; margin: 5px 0; }
+        .stat-lbl { font-size: 0.75em; color: #888; }
+
+        /* Status Colors */
+        .c-good { border-top-color: #00e676 !important; color: #00e676; }
+        .c-warn { border-top-color: #ffea00 !important; color: #ffea00; }
+        .c-bad  { border-top-color: #ff1744 !important; color: #ff1744; }
+
+        /* NVIS Panel */
+        .nvis-panel {
+            background: #1c1c1c; border: 1px solid #333; border-left: 4px solid #d500f9;
+            padding: 15px; border-radius: 6px; margin-bottom: 20px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .nvis-res { font-size: 1.4em; font-weight: bold; color: #fff; }
+
+        /* Maps Grid */
+        .maps-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 15px; }
+        .map-card { background: #161616; border: 1px solid #333; border-radius: 6px; overflow: hidden; }
+        .map-head { background: #222; padding: 8px 15px; font-size: 0.85em; color: #ccc; border-bottom: 1px solid #333; font-weight: bold; }
+        .map-body { height: 250px; background: #000; display: flex; align-items: center; justify-content: center; }
+        .map-body img { max-width: 100%; max-height: 100%; cursor: pointer; }
+
+        /* Lightbox - FIX: บังคับซ่อน */
+        #lightbox {
+            display: none !important; /* บังคับซ่อน 100% */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.95); z-index: 9999;
+            align-items: center; justify-content: center;
+        }
+        #lightbox.active { display: flex !important; } /* แสดงเมื่อมี class active */
+        #lightbox img { max-width: 95%; max-height: 95vh; border: 2px solid #333; }
+        
+        @media(max-width: 600px) {
+            .header, .nvis-panel { flex-direction: column; text-align: center; gap: 10px; }
+            .nvis-sub { text-align: center; border-top: 1px solid #333; padding-top: 5px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="ionos-nav">
+        <a href="#" class="nav-brand">IONOSTEK <span>V90.5</span></a>
+        <a class="nav-btn" onclick="updateData()">[ REFRESH ]</a>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>MONITOR <span style="font-size:0.5em; color:#666;">SEA EDITION</span></h1>
+            </div>
+            <div class="clock-box">
+                <div class="utc-time"><span id="u-h">00</span>:<span id="u-m">00</span> UTC</div>
+                <div class="local-time" id="l-clock">--:-- Local</div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-box" id="b-sfi"><div class="stat-lbl">SFI</div><div class="stat-val" id="v-sfi">--</div></div>
+            <div class="stat-box" id="b-ssn"><div class="stat-lbl">SSN</div><div class="stat-val" id="v-ssn">--</div></div>
+            <div class="stat-box" id="b-kp"><div class="stat-lbl">Kp</div><div class="stat-val" id="v-kp">--</div></div>
+            <div class="stat-box" id="b-bz"><div class="stat-lbl">Bz</div><div class="stat-val" id="v-bz">--</div></div>
+            <div class="stat-box" id="b-dst"><div class="stat-lbl">Dst</div><div class="stat-val" id="v-dst">--</div></div>
+            <div class="stat-box" id="b-wind"><div class="stat-lbl">Wind</div><div class="stat-val" id="v-wind">--</div></div>
+        </div>
+
+        <div class="nvis-panel">
+            <div>
+                <div style="color:#d500f9; font-weight:bold;">⚡ NVIS ADVISOR</div>
+                <div class="nvis-res" id="nvis-res">WAITING...</div>
+            </div>
+            <div class="nvis-sub" style="text-align:right; font-size:0.9em; color:#aaa;">
+                foF2 Est: <span id="nvis-fof2" style="color:#00e676;">-- MHz</span><br>
+                <span id="nvis-logic">Auto Mode</span>
+            </div>
+        </div>
+
+        <div class="maps-grid">
+            <div class="map-card" style="border-color:#d500f9;">
+                <div class="map-head" style="color:#d500f9;">★ GLOBAL/SEA foF2 (SWS)</div>
+                <div class="map-body">
+                    <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
+                         onclick="openImg(this.src)" 
+                         referrerpolicy="no-referrer"
+                         onerror="this.src='https://placehold.co/600x400/222/FFF?text=Map+Offline'">
+                </div>
+            </div>
+
+            <div class="map-card"><div class="map-head">D-REGION (NOAA)</div><div class="map-body">
+                <img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" onclick="openImg(this.src)">
+            </div></div>
+            
+            <div class="map-card"><div class="map-head">SUNSPOTS (NASA)</div><div class="map-body">
+                <img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" onclick="openImg(this.src)">
+            </div></div>
+        </div>
+
+        <div style="margin-top:30px; border-top:1px solid #222; padding:15px; text-align:center; font-size:0.8em; color:#555;">
+            IONOSTEK V90.5 • SYSTEM OK
+        </div>
+    </div>
+
+    <div id="lightbox" onclick="this.classList.remove('active')">
+        <img id="lb-img" src="">
+    </div>
+
+    <script>
+        // 1. Lightbox Control
+        function openImg(src) {
+            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
+            document.getElementById('lightbox').classList.add('active');
+        }
+
+        // 2. Clock
+        function tick() {
+            const d = new Date();
+            document.getElementById('u-h').innerText = d.getUTCHours().toString().padStart(2,'0');
+            document.getElementById('u-m').innerText = d.getUTCMinutes().toString().padStart(2,'0');
+            const lH = d.getHours().toString().padStart(2,'0');
+            const lM = d.getMinutes().toString().padStart(2,'0');
+            document.getElementById('l-clock').innerText = lH + ":" + lM + " Local";
+        }
+        setInterval(tick, 1000);
+        tick();
+
+        // 3. UI Updater
+        function setVal(id, val, status) {
+            let el = document.getElementById('v-'+id);
+            let box = document.getElementById('b-'+id);
+            if(el) el.innerText = val;
+            if(box) {
+                box.className = 'stat-box'; // reset
+                if(status === 'bad') box.classList.add('c-bad');
+                else if(status === 'warn') box.classList.add('c-warn');
+                else box.classList.add('c-good');
+            }
+        }
+
+        // 4. Data Fetching (Using AllOrigins to prevent blocking)
+        async function fetchTxt(url) {
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                return r.ok ? await r.text() : null;
+            } catch(e) { return null; }
+        }
+        async function fetchJson(url) {
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                return r.ok ? await r.json() : null;
+            } catch(e) { return null; }
+        }
+
+        async function updateData() {
+            // A. SFI
+            let txt = await fetchTxt('https://services.swpc.noaa.gov/text/daily-solar-indices.txt');
+            let sfi = 70, kp = 2;
+            if(txt) {
+                let lines = txt.trim().split('\n');
+                for(let i=lines.length-1; i>=0; i--) {
+                    if(lines[i].startsWith('20')) {
+                        let c = lines[i].trim().split(/\s+/);
+                        sfi = parseInt(c[3]);
+                        setVal('sfi', sfi, sfi<70?'warn':'good');
+                        setVal('ssn', parseInt(c[4]), 'good');
+                        break;
+                    }
+                }
+            }
+
+            // B. Mag/Plas
+            let mag = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json');
+            if(mag && mag.length) {
+                let bz = parseFloat(mag[mag.length-1][3]);
+                setVal('bz', bz, bz<0?'bad':'good');
+            }
+            let plas = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json');
+            if(plas && plas.length) {
+                let w = parseFloat(plas[plas.length-1][2]);
+                setVal('wind', Math.round(w), w>500?'warn':'good');
+            }
+
+            // C. Kp/Dst
+            let kpData = await fetchJson('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
+            if(kpData && kpData.length) {
+                kp = parseFloat(kpData[kpData.length-1][1]);
+                setVal('kp', kp, kp>=4?'bad':'good');
+            }
+            let dstData = await fetchJson('https://services.swpc.noaa.gov/products/kyoto-dst.json');
+            if(dstData && dstData.length) {
+                let dst = parseInt(dstData[dstData.length-1][1]);
+                setVal('dst', dst, dst<-50?'bad':'good');
+            }
+
+            // D. NVIS Logic
+            let d = new Date();
+            let h = d.getHours();
+            let isDay = (h>=6 && h<18);
+            let fof2 = 2.0 + (sfi * 0.04);
+            if(!isDay) fof2 *= 0.55;
+            if(kp >= 4) fof2 *= 0.8;
+            
+            let band = "WAIT"; let c = "#888";
+            if(fof2 >= 7.0) { band="40m (7 MHz)"; c="#00e676"; }
+            else if(fof2 >= 5.0) { band="40m/60m"; c="#ffea00"; }
+            else if(fof2 >= 3.5) { band="80m (3.5 MHz)"; c="#00e676"; }
+            else if(fof2 >= 1.8) { band="160m"; c="#ff1744"; }
+            
+            document.getElementById('nvis-res').innerText = band;
+            document.getElementById('nvis-res').style.color = c;
+            document.getElementById('nvis-fof2').innerText = fof2.toFixed(1) + " MHz";
+            document.getElementById('nvis-logic').innerText = isDay ? "Day Mode" : "Night Mode";
+        }
+
+        // Run
+        updateData();
+        setInterval(updateData, 60000);
+    </script>
+</body>
+</html>
