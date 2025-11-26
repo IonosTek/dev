@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V91.0 (Emergency Fix)</title>
+    <title>IonosTek Monitor V93.0 (Production)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS V91.0 FIXED --- */
+        /* --- CSS V93.0 PRODUCTION --- */
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
@@ -15,11 +15,12 @@
         
         body { 
             font-family: 'Chakra Petch', sans-serif; 
-            background: var(--bg); color: var(--text); 
+            background: var(--bg); 
+            color: var(--text); 
             margin: 0; padding: 0; 
             overflow-x: hidden;
-            user-select: none; /* Anti-Copy */
-            -webkit-user-select: none;
+            /* Anti-Copy Styles */
+            user-select: none; -webkit-user-select: none;
         }
         
         /* Nav */
@@ -27,24 +28,30 @@
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 15px; display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.1em; }
+        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; }
         .nav-links { display: flex; gap: 15px; }
-        .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .nav-links a { 
+            color: #888; text-decoration: none; font-weight: 600; 
+            font-size: 0.9em; cursor: pointer; transition: 0.3s; 
+        }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
+        /* Container - ให้แน่ใจว่าอยู่ชั้นบน (z-index 1) */
         .container { padding: 15px; max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
 
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
-        h1 { margin: 0; font-weight: 700; font-size: 1.8em; }
+        h1 { margin: 0; font-weight: 700; font-size: 1.8em; letter-spacing: 1px; }
         
         .clock-box { text-align: right; }
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
         .local-time { font-size: 0.85em; color: #888; margin-top: 4px; }
+        
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; }
         .dot-blink { animation: fade 2s infinite; color: var(--green); }
         @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
 
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; }
+        .btn-guide:hover { background: var(--blue); color: #fff; }
 
         /* Stats Grid */
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
@@ -59,7 +66,7 @@
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
         
-        /* NVIS */
+        /* NVIS Panel */
         .nvis-panel {
             background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
             border: 1px solid #333; border-left: 4px solid var(--purple);
@@ -76,11 +83,61 @@
         .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
         .c-body { background: #000; height: 300px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
+        .c-body img:hover { opacity: 0.8; }
 
-        /* --- LIGHTBOX FIX (CRITICAL) --- */
+        /* --- FIX: Lightbox (ตัวการจอมืด) --- */
         #lightbox { 
+            display: none; /* ปิดตายตั้งแต่เริ่ม */
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
-            display: flex; align-items: center; justify-content: center;
-            /* Default State: Invisible and Behind Everything */
-            opacity
+            z-index: 9999; 
+            align-items: center; justify-content: center;
+        }
+        #lightbox img { max-width: 98%; max-height: 95vh; border: 2px solid #333; }
+        
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 999; align-items: center; justify-content: center; }
+        .m-content { background: var(--card); padding: 30px; border-radius: 10px; max-width: 600px; border: 1px solid #444; position: relative; }
+        .close { position: absolute; top: 10px; right: 20px; font-size: 30px; cursor: pointer; color: #fff; }
+
+        .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.75em; color: #444; padding: 0 10px; border-top: 1px solid #222; padding-top: 20px; }
+        #fetch-log { color: var(--orange); font-family: monospace; }
+        .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; font-size: 0.9em; margin-left: 10px; }
+
+        .guide-sec { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.1em; }
+        .guide-p { color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 8px; }
+        .hl-g { color: var(--green); font-weight:bold; }
+        .hl-r { color: var(--red); font-weight:bold; }
+
+        @media (max-width: 600px) { 
+            .header { flex-direction: column; text-align: center; gap:10px; } 
+            .stats { grid-template-columns: repeat(2, 1fr); gap: 10px; } 
+            .clock-box { text-align: center; }
+            .ionos-nav { flex-direction: column; gap: 10px; padding-bottom: 15px; }
+            .nvis-panel { flex-direction: column; text-align: center; gap: 5px; }
+            .nvis-sub { width: 100%; border-top: 1px solid #333; padding-top: 5px; margin-top: 5px; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;">
+
+    <nav class="ionos-nav">
+        <a href="#" class="nav-brand">> IONOSTEK.COM</a>
+        <div class="nav-links">
+            <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
+            <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
+            <a onclick="updateAll()">[ REFRESH ]</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>IONOSTEK <span style="color:#fff">MONITOR</span></h1>
+                <div class="sys-active"><span class="dot-blink">●</span> System Active</div>
+            </div>
+            <div class="clock-box">
+                <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
+                <div class="local-time" id="local-clock">--:-- Local</div>
+                <button onclick="document.getElementById('guideModal
