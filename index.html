@@ -11,7 +11,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V131.0 (Hard Refresh)</title>
+    <title>IonosTek Monitor V133.0 (Permanent Arrow)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL RESET --- */
@@ -55,13 +55,13 @@
         .local-time { font-size: 0.9em; color: #888; margin-top: 4px; }
         
         /* Active Dot Pulse */
-        @keyframes pulse { 
+        @keyframes sys-pulse { 
             0% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
             50% { opacity: 0.4; text-shadow: none; transform: scale(0.9); } 
             100% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
         }
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
-        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: pulse 1.5s infinite ease-in-out; }
+        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: sys-pulse 1.5s infinite ease-in-out; }
 
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
@@ -80,12 +80,9 @@
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
         /* ARROWS */
-        @keyframes arrow-pulse { 
-            0%, 100% { opacity: 1; transform: scale(1); } 
-            50% { opacity: 0.6; transform: scale(0.95); } 
-        }
-        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; animation: arrow-pulse 2s infinite; }
-        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-pulse 2s infinite; }
+        @keyframes arrow-pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.95); } }
+        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; animation: arrow-pulse 1.5s infinite; }
+        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-pulse 1.5s infinite; }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -107,8 +104,7 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX (ABSOLUTE SAFE MODE) --- */
-        /* ใช้ !important เพื่อบังคับซ่อนตั้งแต่โหลด */
+        /* --- 7. LIGHTBOX (FIXED) --- */
         #lightbox { 
             display: none !important; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -117,29 +113,18 @@
             align-items: center; justify-content: center;
             cursor: pointer;
         }
-        #lightbox img { 
-            max-width: 85%; max-height: 85vh; 
-            border: 2px solid #333; 
-            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
-            cursor: pointer; /* รูปก็เป็นปุ่มปิด */
-        }
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
         .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
+        .lb-close:hover { color: var(--red); }
         
-        /* --- 8. MODAL --- */
-        .modal { 
-            display: none !important; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); 
-            z-index: 10000; 
-            align-items: center; justify-content: center; 
-        }
+        /* --- 8. MODAL (FIXED) --- */
+        .modal { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
         .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
         .close:hover { color: #fff; }
 
         .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.8em; color: #444; border-top: 1px solid #222; padding-top: 20px; }
         #fetch-log { color: var(--orange); font-family: monospace; }
-        /* ปุ่ม Refresh เปลี่ยนเป็น Reload หน้าเว็บทันที */
         .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; margin-left: 10px; }
 
         .guide-sec { margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #333; }
@@ -167,7 +152,7 @@
         <div class="nav-links">
             <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
             <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
-            <a onclick="window.location.reload()">[ REFRESH ]</a>
+            <a onclick="updateAll()">[ REFRESH ]</a>
         </div>
     </nav>
 
@@ -180,7 +165,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="openModal()" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -233,15 +218,14 @@
         </div>
 
         <div class="footer">
-            <div><span id="fetch-log">System Ready</span> 
-            <button class="btn-retry" onclick="window.location.reload()">REFRESH</button>
-            </div>
-            <span style="color:#666;">V131.0 • Hard Refresh</span>
+            <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
+            <span style="color:#666;">V133.0 • Permanent Arrow</span>
         </div>
     </div>
 
-    <div id="guideModal" class="modal" style="display: none !important;">
-        <div class="m-content" onclick="event.stopPropagation()"> <span class="close" onclick="closeModal()">&times;</span>
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleDisplay('guideModal')">
+        <div class="m-content" onclick="event.stopPropagation()">
+            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -258,16 +242,14 @@
         </div>
     </div>
 
-    <div id="lightbox" style="display: none !important;" onclick="closeLightbox()">
+    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
         <span class="lb-close">&times;</span>
-        <img id="lb-img" src="">
+        <img id="lb-img" src="" onclick="toggleDisplay('lightbox')">
     </div>
 
     <script>
-        // 1. Anti-Copy
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
-        // 2. Clock
         function updateClock() {
             try {
                 const d = new Date();
@@ -281,29 +263,20 @@
             } catch(e){}
         }
 
-        // 3. POPUP LOGIC (SIMPLE & STABLE)
+        // UI Helpers
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
-            lb.style.setProperty('display', 'flex', 'important'); // Override !important
+            lb.style.setProperty('display', 'flex', 'important');
         }
-        
-        function closeLightbox() {
-            let lb = document.getElementById('lightbox');
-            lb.style.setProperty('display', 'none', 'important'); // Force Close
+        function toggleDisplay(id) {
+            let el = document.getElementById(id);
+            if(el.style.display === 'flex') { el.style.setProperty('display', 'none', 'important'); } 
+            else { el.style.setProperty('display', 'flex', 'important'); }
         }
-
-        function openModal() {
-            document.getElementById('guideModal').style.setProperty('display', 'flex', 'important');
-        }
-        
-        function closeModal() {
-            document.getElementById('guideModal').style.setProperty('display', 'none', 'important');
-        }
-        
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // 4. DATA LOGIC (V120)
+        // --- DATA ENGINE (SAFE ARROW FIX) ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -314,18 +287,33 @@
 
                 let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
-                // Trend Arrow (ขวา)
-                if(diff !== 0) {
-                    let tColor = 'var(--green)';
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)';
-                    else tColor = (diff < 0) ? 'var(--red)' : 'var(--green)';
-                    let tSymbol = (diff > 0) ? '▲' : '▼';
-                    trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
+                // 1. Trend Arrow (Right) - Show Always (even if diff=0)
+                // Default: Good (Green/Up), Bad (Red/Down)
+                let tColor = 'var(--green)';
+                let tSymbol = '▲'; 
+                
+                // ถ้า Diff < 0 (ลดลง)
+                if(diff < 0) {
+                    tSymbol = '▼';
+                    // Logic: ค่าที่ลดลงแล้วดี (Kp, Wind, Den) -> Green
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)';
+                    else tColor = 'var(--red)'; // SFI, SSN, BZ, DST ค่าลด = แย่
+                } 
+                // ถ้า Diff >= 0 (เพิ่มขึ้น หรือ เท่าเดิม)
+                else {
+                    tSymbol = '▲'; // หรือใช้ '=' ถ้าเท่ากับ 0 แต่เพื่อความสวยงามใช้ ▲ เป็น default
+                    if(diff == 0) tSymbol = '▲'; // Force Show Arrow
+                    
+                    // Logic: ค่าที่เพิ่มแล้วแย่
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--red)';
+                    else tColor = 'var(--green)';
                 }
+                
+                trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
 
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
-                // Status Arrow (ซ้าย)
+                // 2. Status Arrow (Left)
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
@@ -335,9 +323,10 @@
                         break;
                     case 'dst':
                         let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
-                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`; }
-                        else if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`; }
-                        else { valueHtml = val; }
+                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
+                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
+                        if(numVal <= -20) valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
+                        else valueHtml = val;
                         break;
                     case 'bt':
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
@@ -358,7 +347,6 @@
             } catch(e){}
         }
 
-        // 5. Fetching
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
@@ -400,6 +388,7 @@
                 }
                 if(curr) {
                     sfiVal = parseInt(curr[3]); 
+                    // Force 0 diff if prev not found to show arrow
                     set('sfi', sfiVal, prev ? sfiVal - parseInt(prev[3]) : 0);
                     set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
                 }
