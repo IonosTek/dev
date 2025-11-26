@@ -3,28 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V101.0 (TouchFlow)</title>
+    <title>IonosTek Monitor V102.0 (Bold Arrow)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL SETTINGS --- */
         * { box-sizing: border-box; }
-        
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
             --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
         }
-        
         body { 
             font-family: 'Chakra Petch', sans-serif; 
             background: var(--bg); color: var(--text); 
-            margin: 0; padding: 0; 
-            overflow-x: hidden;
+            margin: 0; padding: 0; overflow-x: hidden;
             user-select: none; -webkit-user-select: none;
             min-height: 100vh;
         }
         
-        /* --- 2. NAVIGATION --- */
+        /* --- NAVIGATION --- */
         .ionos-nav {
             position: relative; z-index: 100;
             background-color: #000; border-bottom: 1px solid #333;
@@ -32,24 +29,15 @@
         }
         .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.1em; letter-spacing: 1px; }
         
-        /* BLINK SYMBOL (>) */
         @keyframes cursor-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .blink-symbol { animation: cursor-blink 1s step-end infinite; margin-right: 2px; font-weight: 900; }
 
         .nav-links { display: flex; gap: 15px; }
-        .nav-links a { 
-            color: #888; text-decoration: none; font-weight: 600; 
-            cursor: pointer; transition: 0.3s; font-size: 0.9em; 
-        }
+        .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* --- 3. CONTAINER --- */
-        .container { 
-            position: relative; z-index: 1; 
-            padding: 15px; max-width: 1600px; margin: 0 auto; 
-            display: block;
-        }
-
+        /* --- CONTAINER --- */
+        .container { position: relative; z-index: 1; padding: 15px; max-width: 1600px; margin: 0 auto; display: block; }
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; flex-wrap: wrap; }
         h1 { margin: 0; font-weight: 700; font-size: 1.8em; }
         
@@ -57,29 +45,32 @@
         .utc-time { font-size: 1.6em; font-weight: 700; color: var(--blue); line-height: 1; }
         .local-time { font-size: 0.85em; color: #888; margin-top: 4px; }
         
-        /* ACTIVE DOT PULSE */
         @keyframes sys-pulse { 
             0% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
             50% { opacity: 0.4; text-shadow: none; transform: scale(0.9); } 
             100% { opacity: 1; text-shadow: 0 0 5px var(--green); transform: scale(1); } 
         }
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; display: flex; align-items: center; }
-        .sys-dot { 
-            color: var(--green); margin-right: 8px; font-size: 1.2em; 
-            animation: sys-pulse 1.5s infinite ease-in-out; 
-        }
+        .sys-dot { color: var(--green); margin-right: 8px; font-size: 1.2em; animation: sys-pulse 1.5s infinite ease-in-out; }
 
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* --- 4. STATS GRID --- */
+        /* --- STATS GRID --- */
         .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; width: 100%; }
         .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
         .val { font-size: 2.0em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; white-space: nowrap; }
         .lbl { font-size: 0.8em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.7em; color: #666; display: block; margin-top: -5px; }
         
-        .status-arrow { font-size: 0.8em; margin-right: 8px; } 
+        /* UPDATED ARROW STYLES */
+        .status-arrow { 
+            font-size: 0.9em; /* ใหญ่ขึ้น */
+            margin-right: 8px; 
+            vertical-align: middle;
+            display: inline-block;
+            margin-top: -5px; /* ดันขึ้นนิดหน่อยให้ตรงกลาง */
+        } 
         .trend-arrow { font-size: 0.5em; margin-left: 5px; position: relative; top: -5px; } 
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
@@ -88,18 +79,13 @@
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
         
-        /* --- 5. NVIS PANEL --- */
-        .nvis-panel {
-            background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
-            border: 1px solid #333; border-left: 4px solid var(--purple);
-            padding: 10px 15px; margin-bottom: 20px; border-radius: 6px;
-            display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;
-        }
+        /* --- NVIS PANEL --- */
+        .nvis-panel { background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%); border: 1px solid #333; border-left: 4px solid var(--purple); padding: 10px 15px; margin-bottom: 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .nvis-main { display: flex; align-items: center; }
         .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; letter-spacing: 1px; }
         .nvis-sub { font-size: 0.85em; text-align: right; }
 
-        /* --- 6. MAPS GRID --- */
+        /* --- MAPS GRID --- */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; width: 100%; }
         .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; }
         .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
@@ -107,57 +93,18 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX (TOUCH CLOSE) --- */
-        #lightbox { 
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.98); 
-            z-index: 9999; 
-            align-items: center; justify-content: center;
-            cursor: pointer; /* ให้รู้ว่ากดปิดได้ */
-        }
-        
-        #lightbox img { 
-            max-width: 85%; /* เหลือขอบดำไว้ */
-            max-height: 85vh; 
-            border: 2px solid #333; 
-            box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            /* สำคัญ: ไม่ดัก Event คลิกที่รูป เพื่อให้มันส่งไปปิด Lightbox ได้ */
-            cursor: pointer; 
-            transition: transform 0.1s;
-        }
+        /* --- LIGHTBOX --- */
+        #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center; cursor: pointer; }
+        #lightbox.active { display: flex !important; }
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; transition: transform 0.1s; }
         #lightbox img:active { transform: scale(0.98); }
-        
-        .lb-close {
-            position: absolute; top: 20px; right: 30px;
-            color: #fff; font-size: 40px; font-weight: bold;
-            cursor: pointer; transition: 0.3s;
-            z-index: 10000;
-        }
+        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 10000; }
         .lb-close:hover { color: var(--red); }
         
-        /* --- 8. MODAL --- */
-        .modal { 
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); 
-            z-index: 10000; 
-            align-items: center; justify-content: center; 
-        }
-        
-        .m-content { 
-            background: var(--card); padding: 40px 30px; 
-            border-radius: 10px; max-width: 600px; width: 90%; 
-            border: 1px solid #444; position: relative; 
-            box-shadow: 0 0 20px rgba(0,0,0,0.5);
-        }
-        
-        .close { 
-            position: absolute; top: 10px; right: 15px; 
-            font-size: 35px; line-height: 35px; 
-            font-weight: bold; color: #888; 
-            cursor: pointer; transition: 0.3s;
-        }
+        /* --- MODAL --- */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
+        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .close { position: absolute; top: 10px; right: 15px; font-size: 35px; line-height: 35px; font-weight: bold; color: #888; cursor: pointer; transition: 0.3s; }
         .close:hover { color: var(--red); }
 
         .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.75em; color: #444; padding: 0 10px; border-top: 1px solid #222; padding-top: 20px; }
@@ -201,7 +148,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="openModal()" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -259,13 +206,13 @@
                 <span id="fetch-log">System Ready</span>
                 <button class="btn-retry" onclick="updateAll()">REFRESH</button>
             </div>
-            <span style="color:#666;">V101.0 • TouchFlow</span>
+            <span style="color:#666;">V102.0 • Bold Arrow</span>
         </div>
     </div>
 
     <div id="guideModal" class="modal" style="display: none !important;">
         <div class="m-content">
-            <span class="close" onclick="closeModal()">&times;</span>
+            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -282,7 +229,7 @@
         </div>
     </div>
 
-    <div id="lightbox" style="display: none !important;" onclick="closeLightbox()">
+    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
         <span class="lb-close">&times;</span>
         <img id="lb-img" src="">
     </div>
@@ -309,29 +256,25 @@
             } catch(e){}
         }
 
-        // --- 3. UI HELPERS (ROBUST) ---
+        // --- 3. UI HELPERS ---
         function view(src) { 
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
-            lb.style.setProperty('display', 'flex', 'important'); // Force Open
+            lb.style.setProperty('display', 'flex', 'important');
         }
         
-        function closeLightbox() {
-            let lb = document.getElementById('lightbox');
-            lb.style.setProperty('display', 'none', 'important'); // Force Close
-        }
-
-        function openModal() {
-            document.getElementById('guideModal').style.setProperty('display', 'flex', 'important');
-        }
-        
-        function closeModal() {
-            document.getElementById('guideModal').style.setProperty('display', 'none', 'important');
+        function toggleDisplay(id) {
+            let el = document.getElementById(id);
+            if(el.style.display === 'flex') {
+                el.style.setProperty('display', 'none', 'important');
+            } else {
+                el.style.setProperty('display', 'flex', 'important');
+            }
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- 4. DATA DISPLAY ---
+        // --- 4. DATA DISPLAY ENGINE (BOLD ARROWS) ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -345,6 +288,7 @@
                 let valueHtml = val;
                 let trendHtml = '';
 
+                // ลูกศร Trend (ตัวเล็กข้างหลัง)
                 if(diff !== 0) {
                     let tColor = (diff > 0) ? 'var(--green)' : 'var(--red)';
                     if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
@@ -353,37 +297,45 @@
                     trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
                 }
 
+                // ลูกศร Status (ตัวใหญ่ข้างหน้า) - ใช้ Unicode แบบหนา
+                const BIG_UP = '&#11014;'; // ⬆
+                const BIG_DOWN = '&#11015;'; // ⬇
+
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
-                        let bzArrow = (numVal < 0) ? '▼' : '▲';
+                        let bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP; // หนา
                         if(numVal < 0) boxClass = 'c-warn'; 
                         if(numVal <= -5) boxClass = 'c-alert'; 
                         valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
 
                     case 'dst':
-                        let dstColor = 'var(--green)'; let dstArrow = '▲';
-                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = '▼'; boxClass = 'c-warn'; }
-                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = '▼'; boxClass = 'c-alert'; }
+                        let dstColor = 'var(--green)'; let dstArrow = BIG_UP; // หนา
+                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
+                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
                         valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
                         break;
-
+                    
+                    // กรณีอื่นๆ ใช้ตัวเลขล้วน
                     case 'kp':
                         if(numVal >= 4) boxClass = 'c-warn';
                         if(numVal >= 5) boxClass = 'c-alert';
                         valueHtml = val;
                         break;
-                    
                     case 'wind':
                          if(numVal >= 500) boxClass = 'c-warn';
                          if(numVal >= 800) boxClass = 'c-alert';
                          valueHtml = val;
                          break;
-
                     case 'sfi':
                         if(numVal < 70) boxClass = 'c-warn';
                         valueHtml = val;
+                        break;
+                    case 'bt':
+                        let btArrow = (diff > 0) ? BIG_UP : ((diff < 0) ? BIG_DOWN : '');
+                        let btColor = 'var(--green)'; // ปกติ BT สีเขียวเสมอ
+                        valueHtml = (btArrow ? `<span class="status-arrow" style="color:${btColor}">${btArrow}</span> ` : '') + val;
                         break;
 
                     default: valueHtml = val; break;
@@ -415,7 +367,11 @@
                 }
             }
             let mag = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json');
-            if(mag && mag.length>1) { let l=mag[mag.length-1]; set('bz', parseFloat(l[3]).toFixed(2)); set('bt', parseFloat(l[6]).toFixed(1)); }
+            if(mag && mag.length>1) { 
+                let l=mag[mag.length-1]; let p=mag[mag.length-2];
+                set('bz', parseFloat(l[3]).toFixed(2)); 
+                set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
+            }
             let plas = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json');
             if(plas && plas.length>1) { let l=plas[plas.length-1]; set('den', Math.round(parseFloat(l[1]))); set('wind', Math.round(parseFloat(l[2]))); }
             let kp = await fetchJson('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
