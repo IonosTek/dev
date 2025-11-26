@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V106.0 (Final Exact)</title>
+    <title>IonosTek Monitor V107.0 (Turbo Charged)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL RESET --- */
@@ -58,21 +58,19 @@
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* --- 4. STATS GRID (FIXED 8 COLS) --- */
+        /* --- 4. STATS GRID (8 COLS) --- */
         .stats { 
             display: grid; 
-            /* บังคับ 8 คอลัมน์ เพื่อให้เหมือนต้นฉบับเป๊ะ */
             grid-template-columns: repeat(8, 1fr); 
-            gap: 8px; /* ลดช่องว่างนิดนึงกันตกบรรทัด */
+            gap: 8px; 
             margin-bottom: 20px; 
             width: 100%; 
         }
         
         .box { background: var(--card); padding: 12px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; }
         
-        /* ปรับขนาด Font ให้พอดีไม่ล้น */
         .val { 
-            font-size: 1.7em; /* ปรับขนาดให้พอดีกับ 8 ช่อง */
+            font-size: 1.7em; 
             font-weight: 700; 
             margin: 5px 0; 
             display: flex; justify-content: center; align-items: center; 
@@ -81,11 +79,9 @@
         .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
-        /* ARROWS */
         .status-arrow { font-size: 0.9em; margin-right: 5px; vertical-align: middle; display: inline-block; margin-top: -4px; } 
         .trend-arrow { font-size: 0.6em; margin-left: 5px; vertical-align: middle; display: inline-block; margin-top: -6px; } 
 
-        /* COLORS */
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
         .c-alert { border-top-color: var(--red) !important; color: var(--red); }
@@ -106,13 +102,14 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX & MODAL --- */
+        /* --- 7. LIGHTBOX --- */
         #lightbox { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 9999; align-items: center; justify-content: center; cursor: pointer; }
         #lightbox.active { display: flex !important; }
         #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; transition: transform 0.1s; }
         #lightbox img:active { transform: scale(0.98); }
         .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; transition: 0.3s; z-index: 10000; }
         
+        /* --- MODAL --- */
         .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
         .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
@@ -128,7 +125,7 @@
         .hl-r { color: var(--red); font-weight:bold; }
         .hl-y { color: var(--yellow); font-weight:bold; }
 
-        /* Responsive: ต่ำกว่า 1200px ถึงจะยอมให้ย่อเหลือ 4 คอลัมน์ */
+        /* Responsive */
         @media (max-width: 1200px) { .stats { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 600px) { 
             .header { flex-direction: column; text-align: center; gap:10px; } 
@@ -214,7 +211,7 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V106.0 • Final Exact Match</span>
+            <span style="color:#666;">V107.0 • Turbo Charged</span>
         </div>
     </div>
 
@@ -268,19 +265,15 @@
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- LOGIC การแสดงผลที่ถูกต้อง 100% ตามภาพ ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
                 let box = document.getElementById('b-'+id);
                 if(!el) return;
-                
                 let numVal = parseFloat(val);
                 if(isNaN(numVal)) { el.innerText = val; return; }
 
-                let boxClass = 'c-norm'; 
-                let valueHtml = val;
-                let trendHtml = '';
+                let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
                 if(diff !== 0) {
                     let tColor = (diff > 0) ? 'var(--green)' : 'var(--red)';
@@ -294,28 +287,20 @@
 
                 switch(id) {
                     case 'bz':
-                        // BZ: มีลูกศรซ้าย
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
                         let bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
-                        if(numVal < 0) boxClass = 'c-warn'; 
-                        if(numVal <= -5) boxClass = 'c-alert'; 
+                        if(numVal < 0) boxClass = 'c-warn'; if(numVal <= -5) boxClass = 'c-alert'; 
                         valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
-
                     case 'dst':
-                        // DST: มีลูกศรซ้าย
                         let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
                         if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
                         if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
                         valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
                         break;
-                    
                     case 'bt':
-                        // BT: มีลูกศรซ้าย (สีเขียวชี้ขึ้นเสมอ ตามภาพต้นฉบับ)
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
                         break;
-
-                    // --- กลุ่มนี้ ไม่มีลูกศรซ้าย ---
                     case 'kp':
                         if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
                         valueHtml = val; break;
@@ -325,10 +310,6 @@
                     case 'sfi':
                         if(numVal < 70) boxClass = 'c-warn';
                         valueHtml = val; break;
-                    case 'ssn':
-                    case 'den':
-                        valueHtml = val; break;
-
                     default: valueHtml = val; break;
                 }
                 el.innerHTML = valueHtml + trendHtml;
@@ -336,13 +317,36 @@
             } catch(e){}
         }
 
-        async function fetchText(url) { try { let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url)); if(r.ok) return await r.text(); } catch(e) {} return null; }
-        async function fetchJson(url) { try { let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url)); if(r.ok) return await r.json(); } catch(e) {} return null; }
+        // --- TURBO FETCH: ใช้ Proxy corsproxy.io (เร็ว) คู่กับ allorigins (สำรอง) ---
+        async function fetchData(url, type) {
+            // Try Fast Proxy
+            try {
+                let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url + '?t=' + Date.now()));
+                if(r.ok) { return type === 'json' ? await r.json() : await r.text(); }
+            } catch(e) {}
+            // Fallback to Backup Proxy
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                if(r.ok) { return type === 'json' ? await r.json() : await r.text(); }
+            } catch(e) {}
+            return null;
+        }
 
         async function updateAll() {
             log('Syncing...');
-            let sfiVal=70, ssnVal=0;
-            let txt = await fetchText('https://services.swpc.noaa.gov/text/daily-solar-indices.txt');
+            
+            // ดึงข้อมูลพร้อมกันทั้งหมด (Parallel)
+            const [txt, mag, plas, kpData, dstData] = await Promise.all([
+                fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text'),
+                fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json')
+            ]);
+
+            let sfiVal=70, kpVal=2;
+
+            // SFI
             if(txt) {
                 let lines = txt.trim().split('\n');
                 let curr=null, prev=null;
@@ -358,18 +362,53 @@
                     set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
                 }
             }
-            let mag = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json');
+
+            // MAG
             if(mag && mag.length>2) { 
                 let l=mag[mag.length-1]; let p=mag[mag.length-2];
                 set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
                 set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
             }
-            let plas = await fetchJson('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json');
+
+            // PLASMA
             if(plas && plas.length>2) { 
                 let l=plas[plas.length-1]; let p=plas[plas.length-2];
                 set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
                 set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
             }
-            let kp = await fetchJson('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json');
-            let kpVal=2; if(kp && kp.length>2) { let l=kp[kp.length-1]; let p=kp[kp.length-2]; kpVal=parseFloat(l[1]); set('kp', kpVal.toFixed(2), kpVal-parseFloat(p[1])); }
-            let dst =
+
+            // KP
+            if(kpData && kpData.length>2) { 
+                let l=kpData[kpData.length-1]; let p=kpData[kpData.length-2]; 
+                kpVal=parseFloat(l[1]); 
+                set('kp', kpVal.toFixed(2), kpVal-parseFloat(p[1])); 
+            }
+
+            // DST
+            if(dstData && dstData.length>2) { 
+                let l=dstData[dstData.length-1]; let p=dstData[dstData.length-2]; 
+                set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
+            }
+
+            let cond = document.getElementById('hf-cond');
+            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
+            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
+            
+            log('System Active'); 
+            runNVISModule(sfiVal, kpVal);
+        }
+
+        function runNVISModule(sfi, kp) {
+            try { if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
+                let foF2 = 2.0 + (sfi * 0.04); if(!isDay) foF2*=0.55; if(kp>=4) foF2*=0.85;
+                let t="", c="#fff"; if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} else{t="NO NVIS / BLACKOUT";c="#888";}
+                document.getElementById('nvis-result').innerText=t; document.getElementById('nvis-result').style.color=c;
+                document.getElementById('nvis-fof2').innerText=foF2.toFixed(2)+" MHz"; document.getElementById('nvis-logic').innerText=isDay?"Day":"Night";
+            } catch(e){}
+        }
+
+        window.onload = function() { setInterval(updateClock, 1000); updateClock(); updateAll(); setInterval(updateAll, 60000); };
+    </script>
+</body>
+</html>
