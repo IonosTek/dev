@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V98.0 (The Unbreakable)</title>
+    <title>IonosTek Monitor V99.0 (Perfect Fit)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL SETTINGS --- */
@@ -107,13 +107,41 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX & MODAL (CSS Support) --- */
-        #lightbox, .modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98);
-            z-index: 9999;
+        /* --- 7. LIGHTBOX (FIXED SIZE) --- */
+        #lightbox { 
+            display: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.98); 
+            z-index: 9999; 
             align-items: center; justify-content: center;
-            /* Display controlled via Inline Style for Safety */
+            cursor: pointer; /* ให้รู้ว่ากดปิดได้ */
+        }
+        
+        /* ล็อคขนาดรูปไม่ให้เต็มจอเกินไป (85%) และใส่ขอบ */
+        #lightbox img { 
+            max-width: 85%; 
+            max-height: 85vh; 
+            border: 2px solid #333; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8);
+            cursor: default; /* ที่รูปไม่ต้องเป็นมือ */
+        }
+        
+        /* ปุ่มปิด Lightbox */
+        .lb-close {
+            position: absolute; top: 20px; right: 30px;
+            color: #fff; font-size: 40px; font-weight: bold;
+            cursor: pointer; transition: 0.3s;
+            z-index: 10000;
+        }
+        .lb-close:hover { color: var(--red); }
+        
+        /* --- 8. MODAL --- */
+        .modal { 
+            display: none; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 10000; 
+            align-items: center; justify-content: center; 
         }
         
         .m-content { 
@@ -230,7 +258,7 @@
                 <span id="fetch-log">System Ready</span>
                 <button class="btn-retry" onclick="updateAll()">REFRESH</button>
             </div>
-            <span style="color:#666;">V98.0 • The Unbreakable</span>
+            <span style="color:#666;">V99.0 • Perfect Fit</span>
         </div>
     </div>
 
@@ -254,8 +282,8 @@
     </div>
 
     <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
-        <img id="lb-img">
-    </div>
+        <span class="lb-close">&times;</span>
+        <img id="lb-img" onclick="event.stopPropagation()"> </div>
 
     <script>
         // --- 1. ANTI-COPY ---
@@ -279,11 +307,12 @@
             } catch(e){}
         }
 
-        // --- 3. UI HELPERS (HARD DISPLAY TOGGLE) ---
+        // --- 3. UI HELPERS ---
         function view(src) { 
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
-            lb.style.display = 'flex'; // Override !important
+            // ใช้ style โดยตรงเพื่อ override !important
+            lb.style.display = 'flex'; 
         }
         
         function toggleDisplay(id) {
