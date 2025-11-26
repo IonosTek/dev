@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V100.0 (Touch Toggle)</title>
+    <title>IonosTek Monitor V101.0 (TouchFlow)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL SETTINGS --- */
@@ -107,26 +107,26 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX (TOGGLE FIX) --- */
+        /* --- 7. LIGHTBOX (TOUCH CLOSE) --- */
         #lightbox { 
             display: none; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
             z-index: 9999; 
             align-items: center; justify-content: center;
-            cursor: pointer; /* บอกให้รู้ว่ากดปิดได้ทั้งจอ */
+            cursor: pointer; /* ให้รู้ว่ากดปิดได้ */
         }
-        #lightbox.active { display: flex !important; }
         
         #lightbox img { 
-            max-width: 85%; /* เหลือขอบไว้หายใจ */
+            max-width: 85%; /* เหลือขอบดำไว้ */
             max-height: 85vh; 
             border: 2px solid #333; 
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            cursor: pointer; /* แก้ไข: คลิกที่รูปก็เป็นปุ่มกดได้ */
+            /* สำคัญ: ไม่ดัก Event คลิกที่รูป เพื่อให้มันส่งไปปิด Lightbox ได้ */
+            cursor: pointer; 
             transition: transform 0.1s;
         }
-        #lightbox img:active { transform: scale(0.98); } /* Effect ตอนกดรูป */
+        #lightbox img:active { transform: scale(0.98); }
         
         .lb-close {
             position: absolute; top: 20px; right: 30px;
@@ -201,7 +201,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="openModal()" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -259,13 +259,13 @@
                 <span id="fetch-log">System Ready</span>
                 <button class="btn-retry" onclick="updateAll()">REFRESH</button>
             </div>
-            <span style="color:#666;">V100.0 • Touch Toggle</span>
+            <span style="color:#666;">V101.0 • TouchFlow</span>
         </div>
     </div>
 
     <div id="guideModal" class="modal" style="display: none !important;">
         <div class="m-content">
-            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -282,9 +282,9 @@
         </div>
     </div>
 
-    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
+    <div id="lightbox" style="display: none !important;" onclick="closeLightbox()">
         <span class="lb-close">&times;</span>
-        <img id="lb-img">
+        <img id="lb-img" src="">
     </div>
 
     <script>
@@ -309,25 +309,29 @@
             } catch(e){}
         }
 
-        // --- 3. UI HELPERS ---
+        // --- 3. UI HELPERS (ROBUST) ---
         function view(src) { 
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
-            lb.style.display = 'flex'; 
+            lb.style.setProperty('display', 'flex', 'important'); // Force Open
         }
         
-        function toggleDisplay(id) {
-            let el = document.getElementById(id);
-            if(el.style.display === 'flex') {
-                el.style.display = 'none';
-            } else {
-                el.style.display = 'flex';
-            }
+        function closeLightbox() {
+            let lb = document.getElementById('lightbox');
+            lb.style.setProperty('display', 'none', 'important'); // Force Close
+        }
+
+        function openModal() {
+            document.getElementById('guideModal').style.setProperty('display', 'flex', 'important');
+        }
+        
+        function closeModal() {
+            document.getElementById('guideModal').style.setProperty('display', 'none', 'important');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- 4. DATA ENGINE ---
+        // --- 4. DATA DISPLAY ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -391,7 +395,7 @@
             } catch(e){}
         }
 
-        // --- 5. DATA FETCHING ---
+        // --- 5. FETCHING ---
         async function fetchText(url) { try { let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url)); if(r.ok) return await r.text(); } catch(e) {} return null; }
         async function fetchJson(url) { try { let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url)); if(r.ok) return await r.json(); } catch(e) {} return null; }
 
