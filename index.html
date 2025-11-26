@@ -1,20 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CTWQCML9WQ"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-CTWQCML9WQ');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V137.0 (Active Stream)</title>
+    <title>IonosTek Monitor V138.0 (Total Correction)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. GLOBAL RESET --- */
+        /* --- 1. GLOBAL --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
@@ -37,8 +29,10 @@
         }
         .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; font-size: 1.2em; letter-spacing: 1px; }
         
+        /* Animation: Blink Common */
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
         .blink-symbol { animation: blink 1s step-end infinite; margin-right: 2px; font-weight: 900; }
+        .blink-colon { animation: blink 1s step-end infinite; font-weight: bold; } /* นาฬิกากระพริบ */
 
         .nav-links { display: flex; gap: 20px; }
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
@@ -107,28 +101,37 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX (FIXED) --- */
-        #lightbox { 
-            display: none !important; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        /* --- 7. OVERLAYS (POPUP & MODAL) --- */
+        .overlay {
+            display: none; /* เริ่มต้นซ่อน */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.98); 
-            z-index: 9999; 
+            z-index: 10000; 
             align-items: center; justify-content: center;
-            cursor: pointer;
         }
-        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
-        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
-        .lb-close:hover { color: var(--red); }
         
-        /* --- 8. MODAL (FIXED) --- */
-        .modal { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
-        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
-        .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
-        .close:hover { color: #fff; }
+        /* Class .active ใช้เปิด Overlay (เสถียรสุด) */
+        .overlay.active { display: flex !important; }
+
+        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
+        
+        /* Modal Content (Original Style) */
+        .m-content { background: var(--card); padding: 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
+        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 30px; color: #fff; cursor: pointer; font-weight: bold; }
+        .close-btn:hover { color: var(--red); }
 
         .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.8em; color: #444; border-top: 1px solid #222; padding-top: 20px; }
         #fetch-log { color: var(--orange); font-family: monospace; }
+        /* ปุ่ม Refresh ล่าง: ใช้ onclick แบบ Hard Reload */
         .btn-retry { background: #333; border: 1px solid #555; color: #ccc; padding: 2px 10px; cursor: pointer; border-radius: 4px; margin-left: 10px; }
+
+        /* Guide Content */
+        .guide-sec { margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid #333; }
+        .guide-h { color: var(--blue); font-weight: 700; margin-bottom: 10px; font-size: 1.1em; }
+        .guide-p { color: #ccc; font-size: 0.95em; line-height: 1.6; margin-bottom: 8px; }
+        .hl-g { color: var(--green); font-weight:bold; }
+        .hl-r { color: var(--red); font-weight:bold; }
+        .hl-y { color: var(--yellow); font-weight:bold; }
 
         @media (max-width: 1200px) { .stats { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 600px) { 
@@ -161,7 +164,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleOverlay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -214,14 +217,16 @@
         </div>
 
         <div class="footer">
-            <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V137.0 • Active Stream</span>
+            <div><span id="fetch-log">System Ready</span> 
+            <button class="btn-retry" onclick="window.location.reload()">REFRESH</button>
+            </div>
+            <span style="color:#666;">V138.0 • Total Correction</span>
         </div>
     </div>
 
-    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleDisplay('guideModal')">
+    <div id="guideModal" class="overlay" onclick="toggleOverlay('guideModal')">
         <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
+            <span class="close-btn" onclick="toggleOverlay('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -230,19 +235,23 @@
             </div>
             <div>
                 <div class="guide-h">★ Reading Values</div>
-                <div class="guide-p"><span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br><b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable</div>
+                <div class="guide-p">
+                    <span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br>
+                    <b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
-        <span class="lb-close">&times;</span>
-        <img id="lb-img" src="" onclick="toggleDisplay('lightbox')">
+    <div id="lightbox" class="overlay" onclick="closeLightbox()">
+        <img id="lb-img" src="" onclick="closeLightbox()">
     </div>
 
     <script>
+        // Anti-Copy
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
+        // Clock
         function updateClock() {
             try {
                 const d = new Date();
@@ -256,20 +265,24 @@
             } catch(e){}
         }
 
+        // --- POPUP LOGIC (CLASS TOGGLE) ---
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
-            lb.style.setProperty('display', 'flex', 'important');
+            lb.classList.add('active');
         }
-
-        function toggleDisplay(id) {
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('active');
+        }
+        function toggleOverlay(id) {
             let el = document.getElementById(id);
-            if(el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
-            else el.style.setProperty('display', 'flex', 'important');
+            if(el.classList.contains('active')) el.classList.remove('active');
+            else el.classList.add('active');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
+        // --- DATA ENGINE ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -280,23 +293,18 @@
 
                 let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
-                // Trend Arrow (Right) - Always Show
-                let tColor = 'var(--green)';
-                let tSymbol = '▲'; 
-                
-                if(diff < 0) { 
-                    tSymbol = '▼';
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)';
-                    else tColor = 'var(--red)'; 
-                } else { 
-                    tSymbol = '▲';
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0 ? 'var(--red)' : 'var(--green)');
-                    else tColor = 'var(--green)';
+                // Trend Arrow
+                if(diff !== 0) {
+                    let tColor = (diff > 0) ? 'var(--green)' : 'var(--red)';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
+                    else tColor = (diff < 0) ? 'var(--red)' : 'var(--green)'; // SFI etc
+                    let tSymbol = (diff > 0) ? '▲' : '▼';
+                    trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
                 }
-                trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
 
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
+                // Status Arrow
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
@@ -329,31 +337,23 @@
             } catch(e){}
         }
 
-        // --- ACTIVE STREAM ENGINE ---
+        // Fetching (Independent)
         async function fetchData(url, type) {
             try {
-                // Step 1: Direct Fetch (Best for .com)
-                let r = await fetch(url);
-                if(r.ok) return type === 'json' ? await r.json() : await r.text();
-            } catch(e) {}
-
-            try {
-                // Step 2: AllOrigins (Backup)
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
                 if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
-
             try {
-                // Step 3: CorsProxy (Fallback)
                 let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
                 if(r.ok) return type === 'json' ? await r.json() : await r.text();
             } catch(e) {}
-            
             return null;
         }
 
-        // แยกฟังก์ชันใครฟังก์ชันมัน (Independent Streams)
-        function streamSFI() {
+        async function updateAll() {
+            log('Syncing...');
+            
+            // Fetch แยกกัน
             fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text').then(txt => {
                 if(txt) {
                     let lines = txt.trim().split('\n');
@@ -368,15 +368,11 @@
                         let sfi = parseInt(curr[3]); 
                         set('sfi', sfi, prev ? sfi - parseInt(prev[3]) : 0);
                         set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
-                        // Init NVIS with available SFI
-                        let kpv = parseFloat(document.getElementById('v-kp').innerText)||2;
-                        runNVISModule(sfi, kpv);
+                        runNVISModule(sfi, 2);
                     }
                 }
             });
-        }
 
-        function streamMag() {
             fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json').then(mag => {
                 if(mag && mag.length>2) {
                     let l=mag[mag.length-1]; let p=mag[mag.length-2];
@@ -384,9 +380,7 @@
                     set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
                 }
             });
-        }
 
-        function streamPlas() {
             fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json').then(plas => {
                 if(plas && plas.length>2) {
                     let l=plas[plas.length-1]; let p=plas[plas.length-2];
@@ -394,9 +388,7 @@
                     set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
                 }
             });
-        }
 
-        function streamKp() {
             fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json').then(kp => {
                 if(kp && kp.length>2) {
                     let l=kp[kp.length-1]; let p=kp[kp.length-2];
@@ -405,30 +397,17 @@
                     let cond = document.getElementById('hf-cond');
                     if(kpv >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
                     else { cond.innerText = "NORMAL OPS"; cond.style.color = "var(--green)"; }
-                    
-                    let sfi = parseInt(document.getElementById('v-sfi').innerText)||70;
-                    runNVISModule(sfi, kpv);
                 }
             });
-        }
 
-        function streamDst() {
             fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json').then(dst => {
                 if(dst && dst.length>2) {
                     let l=dst[dst.length-1]; let p=dst[dst.length-2];
                     set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
                 }
             });
-        }
 
-        function updateAll() {
-            log('Syncing...');
-            streamSFI();
-            streamMag();
-            streamPlas();
-            streamKp();
-            streamDst();
-            setTimeout(() => log('System Active'), 2000);
+            log('System Active');
         }
 
         function runNVISModule(sfi, kp) {
