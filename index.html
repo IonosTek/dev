@@ -11,10 +11,10 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V142.0 (Full Status Arrows)</title>
+    <title>IonosTek Monitor V143.0 (Final Corrected)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- 1. GLOBAL RESET --- */
+        /* --- GLOBAL RESET --- */
         * { box-sizing: border-box; margin: 0; padding: 0; }
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
@@ -29,7 +29,7 @@
             min-height: 100vh; padding-bottom: 50px;
         }
         
-        /* --- 2. NAV --- */
+        /* --- NAV --- */
         .ionos-nav {
             background-color: #000; border-bottom: 1px solid #333;
             padding: 10px 20px; display: flex; justify-content: space-between; align-items: center;
@@ -45,7 +45,7 @@
         .nav-links a { color: #888; text-decoration: none; font-weight: 600; cursor: pointer; transition: 0.3s; font-size: 0.9em; }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
-        /* --- 3. CONTAINER --- */
+        /* --- CONTAINER --- */
         .container { padding: 20px; max-width: 1600px; margin: 0 auto; position: relative; z-index: 1; }
         
         .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid #333; padding-bottom: 15px; }
@@ -67,7 +67,7 @@
         .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 5px 15px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.8em; margin-top: 5px; }
         .btn-guide:hover { background: var(--blue); color: #fff; }
 
-        /* --- 4. STATS GRID (8 COLS) --- */
+        /* --- STATS GRID (8 COLS) --- */
         .stats { 
             display: grid; 
             grid-template-columns: repeat(8, 1fr); 
@@ -94,13 +94,13 @@
         
         .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; }
         
-        /* --- 5. NVIS --- */
+        /* --- NVIS --- */
         .nvis-panel { background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%); border: 1px solid #333; border-left: 4px solid var(--purple); padding: 12px 20px; margin-bottom: 20px; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; }
         .nvis-main { display: flex; align-items: center; }
         .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; font-size: 1.1em; }
         .nvis-sub { font-size: 0.9em; text-align: right; }
 
-        /* --- 6. MAPS --- */
+        /* --- MAPS --- */
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; width: 100%; }
         .card { background: var(--card); border-radius: 8px; border: 1px solid #333; overflow: hidden; }
         .c-head { background: #202020; padding: 10px 15px; font-size: 0.9em; color: #ccc; border-bottom: 1px solid #333; display: flex; justify-content: space-between; }
@@ -108,7 +108,7 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX --- */
+        /* --- LIGHTBOX --- */
         #lightbox { 
             display: none !important; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
@@ -121,7 +121,7 @@
         .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
         .lb-close:hover { color: var(--red); }
         
-        /* --- 8. MODAL --- */
+        /* --- MODAL --- */
         .modal { display: none !important; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 10000; align-items: center; justify-content: center; }
         .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
         .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
@@ -169,7 +169,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleOverlay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="toggleDisplay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -223,13 +223,13 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="window.location.reload()">REFRESH</button></div>
-            <span style="color:#666;">V142.0 • Full Status Arrows</span>
+            <span style="color:#666;">V143.0 • Final Corrected</span>
         </div>
     </div>
 
-    <div id="guideModal" class="overlay" style="display: none !important;" onclick="toggleOverlay('guideModal')">
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleDisplay('guideModal')">
         <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close" onclick="toggleOverlay('guideModal')">&times;</span>
+            <span class="close" onclick="toggleDisplay('guideModal')">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -246,9 +246,9 @@
         </div>
     </div>
 
-    <div id="lightbox" class="overlay" style="display: none !important;" onclick="closeLightbox()">
+    <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
         <span class="lb-close">&times;</span>
-        <img id="lb-img" src="" onclick="closeLightbox()">
+        <img id="lb-img" src="" onclick="toggleDisplay('lightbox')">
     </div>
 
     <script>
@@ -267,23 +267,21 @@
             } catch(e){}
         }
 
-        // UI Helpers
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
             lb.style.setProperty('display', 'flex', 'important');
         }
-        function closeLightbox() {
-            document.getElementById('lightbox').style.setProperty('display', 'none', 'important');
-        }
-        function toggleOverlay(id) {
+
+        function toggleDisplay(id) {
             let el = document.getElementById(id);
-            if (el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
+            if(el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
             else el.style.setProperty('display', 'flex', 'important');
         }
+        
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- DATA ENGINE (FULL ARROW LOGIC) ---
+        // --- DATA ENGINE (FULL ARROWS) ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -294,91 +292,66 @@
 
                 let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
-                // 1. Trend Arrow (Right) - มีทุกตัว
-                let tColor = 'var(--green)';
-                let tSymbol = '▲'; 
-                
-                if(diff < 0) { 
-                    tSymbol = '▼';
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)';
-                    else tColor = 'var(--red)'; 
-                } else { 
-                    tSymbol = '▲';
-                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0 ? 'var(--red)' : 'var(--green)');
-                    else tColor = 'var(--green)';
+                // Trend Arrow (Right)
+                if(diff !== 0) {
+                    let tColor = 'var(--green)';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
+                    else tColor = (diff < 0) ? 'var(--red)' : 'var(--green)'; 
+                    let tSymbol = (diff > 0) ? '▲' : '▼';
+                    trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
                 }
-                trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
 
-                // Symbols
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
-                // 2. Status Arrow (Left) - เพิ่มให้ SFI, SSN, KP ตามสั่ง
-                let bzColor, bzArrow;
-
+                // Status Arrow (Left) - Added to ALL metrics
                 switch(id) {
                     case 'sfi':
-                        // SFI: สูง=ดี (เขียวขึ้น), ต่ำ=แย่ (แดงลง)
-                        if(numVal >= 100) { bzColor = 'var(--green)'; bzArrow = BIG_UP; }
-                        else if(numVal >= 70) { bzColor = 'var(--yellow)'; bzArrow = BIG_UP; boxClass = 'c-warn'; }
-                        else { bzColor = 'var(--red)'; bzArrow = BIG_DOWN; boxClass = 'c-alert'; }
-                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
-                        break;
-
                     case 'ssn':
-                        // SSN: มีค่า = ดี (เขียวขึ้น)
-                        bzColor = (numVal > 0) ? 'var(--green)' : 'var(--yellow)';
-                        bzArrow = (numVal > 0) ? BIG_UP : BIG_DOWN;
-                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
+                        // SFI/SSN: ค่าสูง=ดี (เขียวขึ้น)
+                        let sfiColor = (numVal < 70) ? 'var(--red)' : 'var(--green)';
+                        let sfiArrow = (numVal < 70) ? BIG_DOWN : BIG_UP;
+                        if(numVal < 70) boxClass = 'c-warn'; 
+                        valueHtml = `<span class="status-arrow" style="color:${sfiColor}">${sfiArrow}</span> ${val}`;
                         break;
 
                     case 'kp':
-                        // KP: ต่ำ=ดี (เขียวลง), สูง=แย่ (แดงขึ้น)
-                        if(numVal < 4) { bzColor = 'var(--green)'; bzArrow = BIG_DOWN; } // Quiet
-                        else { bzColor = 'var(--red)'; bzArrow = BIG_UP; } // Storm
+                        // KP: ค่าต่ำ=ดี (เขียวลง)
+                        let kpColor = (numVal >= 4) ? 'var(--red)' : 'var(--green)';
+                        let kpArrow = (numVal >= 4) ? BIG_UP : BIG_DOWN;
+                        if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
+                        valueHtml = `<span class="status-arrow" style="color:${kpColor}">${kpArrow}</span> ${val}`;
+                        break;
                         
-                        if(numVal >= 4) boxClass = 'c-warn'; 
-                        if(numVal >= 5) boxClass = 'c-alert';
-                        
-                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
+                    case 'wind':
+                        // Wind: ค่าต่ำ=ดี (เขียวลง)
+                        let wColor = (numVal >= 500) ? 'var(--red)' : 'var(--green)';
+                        let wArrow = (numVal >= 500) ? BIG_UP : BIG_DOWN;
+                        if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
+                        valueHtml = `<span class="status-arrow" style="color:${wColor}">${wArrow}</span> ${val}`;
+                        break;
+
+                    case 'den':
+                        // Den: ค่าต่ำ=ดี (เขียวลง)
+                        let dColor = (numVal >= 10) ? 'var(--red)' : 'var(--green)';
+                        let dArrow = (numVal >= 10) ? BIG_UP : BIG_DOWN;
+                        valueHtml = `<span class="status-arrow" style="color:${dColor}">${dArrow}</span> ${val}`;
                         break;
 
                     case 'bz':
-                        bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
-                        bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
+                        let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
+                        let bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
                         if(numVal < 0) boxClass = 'c-warn'; if(numVal <= -5) boxClass = 'c-alert'; 
                         valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
                         break;
-
                     case 'dst':
                         let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
                         if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
                         if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
-                        
-                        // Show arrow if bad, otherwise simple val (or always arrow if preferred)
-                        // Let's show always for consistency in this version
                         valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
                         break;
-
                     case 'bt':
                         valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
                         break;
-
-                    case 'wind':
-                        // Wind: ต่ำดี สูงแย่
-                        bzColor = (numVal < 500) ? 'var(--green)' : 'var(--red)';
-                        bzArrow = (numVal < 500) ? BIG_DOWN : BIG_UP;
-                        if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
-                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
-                        break;
-
-                    case 'den':
-                         // Den: ต่ำดี สูงแย่
-                        bzColor = (numVal < 10) ? 'var(--green)' : 'var(--red)';
-                        bzArrow = (numVal < 10) ? BIG_DOWN : BIG_UP;
-                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
-                        break;
-
-                    default: valueHtml = val; break;
                 }
 
                 el.innerHTML = valueHtml + trendHtml;
@@ -386,7 +359,7 @@
             } catch(e){}
         }
 
-        // Fetching (Robust)
+        // Fetching (Independent)
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
