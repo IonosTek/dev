@@ -11,7 +11,7 @@
 
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V130.0 (The Fortress)</title>
+    <title>IonosTek Monitor V131.0 (Logic Corrected)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL RESET --- */
@@ -79,10 +79,19 @@
         .lbl { font-size: 0.75em; font-weight: 600; color: #888; text-transform: uppercase; }
         .unit { font-size: 0.65em; color: #666; display: block; margin-top: -5px; }
         
-        /* ARROWS */
-        @keyframes arrow-anim { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.6; transform: scale(0.95); } }
-        .status-arrow { font-size: 1em; margin-right: 5px; display: inline-block; margin-top: -3px; font-weight: 900; animation: arrow-anim 1.5s infinite; }
-        .trend-arrow { font-size: 0.6em; margin-left: 8px; display: inline-block; margin-top: -5px; vertical-align: middle; animation: arrow-anim 1.5s infinite; }
+        /* ARROWS & ANIMATION */
+        @keyframes arrow-pulse { 
+            0%, 100% { opacity: 1; transform: scale(1); } 
+            50% { opacity: 0.6; transform: scale(0.95); } 
+        }
+        .status-arrow { 
+            font-size: 1em; margin-right: 5px; vertical-align: middle; display: inline-block; margin-top: -3px; font-weight: 900; 
+            animation: arrow-pulse 2s infinite;
+        }
+        .trend-arrow { 
+            font-size: 0.6em; margin-left: 8px; vertical-align: middle; display: inline-block; margin-top: -5px; 
+            animation: arrow-pulse 2s infinite;
+        }
 
         .c-norm { border-top-color: var(--green) !important; color: var(--green); }
         .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
@@ -104,20 +113,39 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. OVERLAYS (FIXED LOGIC) --- */
-        .overlay {
-            /* Default hidden by CSS, but will be overridden by Inline Style for safety */
-            display: none; 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.98); z-index: 10000; 
+        /* --- 7. LIGHTBOX (FIXED) --- */
+        /* เริ่มต้นปิดตาย */
+        #lightbox { 
+            display: none !important; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.98); 
+            z-index: 9999; 
             align-items: center; justify-content: center;
+            cursor: pointer; /* ชี้ว่าเป็นปุ่มกดปิดได้ */
         }
+        #lightbox img { 
+            max-width: 85%; max-height: 85vh; 
+            border: 2px solid #333; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.8); 
+            cursor: pointer; /* รูปก็กดได้ */
+            transition: transform 0.1s;
+        }
+        #lightbox img:active { transform: scale(0.98); }
         
-        #lightbox img { max-width: 85%; max-height: 85vh; border: 2px solid #333; box-shadow: 0 0 30px rgba(0,0,0,0.8); cursor: pointer; }
+        .lb-close { position: absolute; top: 20px; right: 30px; color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; z-index: 10000; }
+        .lb-close:hover { color: var(--red); }
         
-        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; }
-        .close-btn { position: absolute; top: 10px; right: 15px; font-size: 35px; color: #888; cursor: pointer; }
-        .close-btn:hover { color: #fff; }
+        /* --- 8. MODAL (FIXED) --- */
+        .modal { 
+            display: none !important; 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); 
+            z-index: 10000; 
+            align-items: center; justify-content: center; 
+        }
+        .m-content { background: var(--card); padding: 40px 30px; border-radius: 10px; max-width: 600px; width: 90%; border: 1px solid #444; position: relative; box-shadow: 0 0 20px rgba(0,0,0,0.5); }
+        .close { position: absolute; top: 10px; right: 15px; font-size: 35px; font-weight: bold; color: #888; cursor: pointer; }
+        .close:hover { color: #fff; }
 
         .footer { display: flex; justify-content: space-between; margin-top: 40px; font-size: 0.8em; color: #444; border-top: 1px solid #222; padding-top: 20px; }
         #fetch-log { color: var(--orange); font-family: monospace; }
@@ -161,7 +189,7 @@
             <div class="clock-box">
                 <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
                 <div class="local-time" id="local-clock">--:-- Local</div>
-                <button onclick="toggleOverlay('guideModal')" class="btn-guide">📘 OPERATOR GUIDE</button>
+                <button onclick="openModal()" class="btn-guide">📘 OPERATOR GUIDE</button>
             </div>
         </div>
 
@@ -215,13 +243,13 @@
 
         <div class="footer">
             <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="updateAll()">REFRESH</button></div>
-            <span style="color:#666;">V130.0 • The Fortress</span>
+            <span style="color:#666;">V131.0 • Logic Corrected</span>
         </div>
     </div>
 
-    <div id="guideModal" class="overlay" style="display: none !important;" onclick="toggleOverlay('guideModal')">
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="closeModal()">
         <div class="m-content" onclick="event.stopPropagation()">
-            <span class="close-btn" onclick="toggleOverlay('guideModal')">&times;</span>
+            <span class="close" onclick="closeModal()">&times;</span>
             <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
             <div class="guide-sec">
                 <div class="guide-h">★ Understanding Bz (The Switch)</div>
@@ -230,20 +258,26 @@
             </div>
             <div>
                 <div class="guide-h">★ Reading Values</div>
-                <div class="guide-p"><span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br><b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable</div>
+                <div class="guide-p">
+                    <span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br>
+                    <b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable
+                </div>
             </div>
         </div>
     </div>
 
-    <div id="lightbox" class="overlay" style="display: none !important;" onclick="toggleOverlay('lightbox')">
-        <img id="lb-img" src="" onclick="toggleOverlay('lightbox')">
+    <div id="lightbox" style="display: none !important;" onclick="closeLightbox()">
+        <span class="lb-close">&times;</span>
+        <img id="lb-img" src="" onclick="event.stopPropagation()"> <script>
+            // Override onclick ใน HTML เพื่อความแน่นอน
+            document.getElementById('lightbox').onclick = function() { closeLightbox(); };
+            document.getElementById('lb-img').onclick = function() { closeLightbox(); };
+        </script>
     </div>
 
     <script>
-        // 1. Anti-Copy
         document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
 
-        // 2. Clock
         function updateClock() {
             try {
                 const d = new Date();
@@ -257,25 +291,30 @@
             } catch(e){}
         }
 
-        // 3. Toggle Logic (Override Inline Style)
+        // --- LOGIC: EXPLICIT OPEN & CLOSE ---
         function openLightbox(src) {
             let lb = document.getElementById('lightbox');
-            document.getElementById('lb-img').src = src + '?t=' + new Date().getTime();
+            let img = document.getElementById('lb-img');
+            img.src = src + '?t=' + new Date().getTime();
             lb.style.setProperty('display', 'flex', 'important');
         }
+        
+        function closeLightbox() {
+            let lb = document.getElementById('lightbox');
+            lb.style.setProperty('display', 'none', 'important');
+        }
 
-        function toggleOverlay(id) {
-            let el = document.getElementById(id);
-            if(el.style.display === 'flex') {
-                el.style.setProperty('display', 'none', 'important');
-            } else {
-                el.style.setProperty('display', 'flex', 'important');
-            }
+        function openModal() {
+            document.getElementById('guideModal').style.setProperty('display', 'flex', 'important');
+        }
+
+        function closeModal() {
+            document.getElementById('guideModal').style.setProperty('display', 'none', 'important');
         }
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // 4. Display Engine
+        // DATA ENGINE
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
@@ -286,6 +325,7 @@
 
                 let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
 
+                // Trend Arrow (Right)
                 if(diff !== 0) {
                     let tColor = (diff > 0) ? 'var(--green)' : 'var(--red)';
                     if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0) ? 'var(--red)' : 'var(--green)'; 
@@ -296,6 +336,7 @@
 
                 const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
 
+                // Status Arrow (Left)
                 switch(id) {
                     case 'bz':
                         let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
@@ -329,7 +370,6 @@
             } catch(e){}
         }
 
-        // 5. Independent Fetch
         async function fetchData(url, type) {
             try {
                 let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
@@ -344,61 +384,65 @@
 
         async function updateAll() {
             log('Syncing...');
-            
-            fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text').then(txt => {
-                if(txt) {
-                    let lines = txt.trim().split('\n');
-                    let curr=null, prev=null;
-                    for(let i=lines.length-1; i>=0; i--) {
-                        if(lines[i].trim().startsWith('20')) {
-                            let c = lines[i].trim().split(/\s+/);
-                            if(!curr) curr = c; else { prev = c; break; }
-                        }
+            const results = await Promise.allSettled([
+                fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text'),
+                fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json')
+            ]);
+
+            const txt = results[0].status === 'fulfilled' ? results[0].value : null;
+            const mag = results[1].status === 'fulfilled' ? results[1].value : null;
+            const plas = results[2].status === 'fulfilled' ? results[2].value : null;
+            const kpData = results[3].status === 'fulfilled' ? results[3].value : null;
+            const dstData = results[4].status === 'fulfilled' ? results[4].value : null;
+
+            let sfiVal=70, kpVal=2;
+
+            if(txt) {
+                let lines = txt.trim().split('\n');
+                let curr=null, prev=null;
+                for(let i=lines.length-1; i>=0; i--) {
+                    if(lines[i].trim().startsWith('20')) {
+                        let c = lines[i].trim().split(/\s+/);
+                        if(!curr) curr = c; else { prev = c; break; }
                     }
-                    if(curr) {
-                        let sfi = parseInt(curr[3]); 
-                        set('sfi', sfi, prev ? sfi - parseInt(prev[3]) : 0);
-                        set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
-                        runNVISModule(sfi, 2);
-                    }
                 }
-            });
-
-            fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json').then(mag => {
-                if(mag && mag.length>2) {
-                    let l=mag[mag.length-1]; let p=mag[mag.length-2];
-                    set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
-                    set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
+                if(curr) {
+                    sfiVal = parseInt(curr[3]); 
+                    set('sfi', sfiVal, prev ? sfiVal - parseInt(prev[3]) : 0);
+                    set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
                 }
-            });
+            }
 
-            fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json').then(plas => {
-                if(plas && plas.length>2) {
-                    let l=plas[plas.length-1]; let p=plas[plas.length-2];
-                    set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
-                    set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
-                }
-            });
+            if(mag && mag.length>2) { 
+                let l=mag[mag.length-1]; let p=mag[mag.length-2];
+                set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
+                set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
+            }
 
-            fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json').then(kp => {
-                if(kp && kp.length>2) {
-                    let l=kp[kp.length-1]; let p=kp[kp.length-2];
-                    let kpv = parseFloat(l[1]);
-                    set('kp', kpv.toFixed(2), kpv-parseFloat(p[1]));
-                    let cond = document.getElementById('hf-cond');
-                    if(kpv >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
-                    else { cond.innerText = "NORMAL OPS"; cond.style.color = "var(--green)"; }
-                }
-            });
+            if(plas && plas.length>2) { 
+                let l=plas[plas.length-1]; let p=plas[plas.length-2];
+                set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
+                set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
+            }
 
-            fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json').then(dst => {
-                if(dst && dst.length>2) {
-                    let l=dst[dst.length-1]; let p=dst[dst.length-2];
-                    set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
-                }
-            });
+            if(kpData && kpData.length>2) { 
+                let l=kpData[kpData.length-1]; let p=kpData[kpData.length-2]; 
+                kpVal=parseFloat(l[1]); set('kp', kpVal.toFixed(2), kpVal-parseFloat(p[1])); 
+            }
 
-            log('System Active');
+            if(dstData && dstData.length>2) { 
+                let l=dstData[dstData.length-1]; let p=dstData[dstData.length-2]; 
+                set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
+            }
+
+            let cond = document.getElementById('hf-cond');
+            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
+            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
+            log('System Active'); runNVISModule(sfiVal, kpVal);
         }
 
         function runNVISModule(sfi, kp) {
