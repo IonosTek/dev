@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V99.0 (Perfect Fit)</title>
+    <title>IonosTek Monitor V100.0 (Touch Toggle)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         /* --- 1. GLOBAL SETTINGS --- */
@@ -107,26 +107,27 @@
         .c-body img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: opacity 0.3s; }
         .c-body img:hover { opacity: 0.8; }
 
-        /* --- 7. LIGHTBOX (FIXED SIZE) --- */
+        /* --- 7. LIGHTBOX (TOGGLE FIX) --- */
         #lightbox { 
             display: none; 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0,0,0,0.98); 
             z-index: 9999; 
             align-items: center; justify-content: center;
-            cursor: pointer; /* ให้รู้ว่ากดปิดได้ */
+            cursor: pointer; /* บอกให้รู้ว่ากดปิดได้ทั้งจอ */
         }
+        #lightbox.active { display: flex !important; }
         
-        /* ล็อคขนาดรูปไม่ให้เต็มจอเกินไป (85%) และใส่ขอบ */
         #lightbox img { 
-            max-width: 85%; 
+            max-width: 85%; /* เหลือขอบไว้หายใจ */
             max-height: 85vh; 
             border: 2px solid #333; 
             box-shadow: 0 0 30px rgba(0,0,0,0.8);
-            cursor: default; /* ที่รูปไม่ต้องเป็นมือ */
+            cursor: pointer; /* แก้ไข: คลิกที่รูปก็เป็นปุ่มกดได้ */
+            transition: transform 0.1s;
         }
+        #lightbox img:active { transform: scale(0.98); } /* Effect ตอนกดรูป */
         
-        /* ปุ่มปิด Lightbox */
         .lb-close {
             position: absolute; top: 20px; right: 30px;
             color: #fff; font-size: 40px; font-weight: bold;
@@ -258,7 +259,7 @@
                 <span id="fetch-log">System Ready</span>
                 <button class="btn-retry" onclick="updateAll()">REFRESH</button>
             </div>
-            <span style="color:#666;">V99.0 • Perfect Fit</span>
+            <span style="color:#666;">V100.0 • Touch Toggle</span>
         </div>
     </div>
 
@@ -283,7 +284,8 @@
 
     <div id="lightbox" style="display: none !important;" onclick="toggleDisplay('lightbox')">
         <span class="lb-close">&times;</span>
-        <img id="lb-img" onclick="event.stopPropagation()"> </div>
+        <img id="lb-img">
+    </div>
 
     <script>
         // --- 1. ANTI-COPY ---
@@ -311,7 +313,6 @@
         function view(src) { 
             let lb = document.getElementById('lightbox');
             document.getElementById('lb-img').src = src + '?t=' + new Date().getTime(); 
-            // ใช้ style โดยตรงเพื่อ override !important
             lb.style.display = 'flex'; 
         }
         
@@ -326,7 +327,7 @@
         
         function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
 
-        // --- 4. DATA DISPLAY ENGINE ---
+        // --- 4. DATA ENGINE ---
         function set(id, val, diff=0) {
             try {
                 let el = document.getElementById('v-'+id);
