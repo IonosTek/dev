@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IonosTek Monitor V90.8 (Secure)</title>
+    <title>IonosTek Monitor V90.9 (Final Fix)</title>
     <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* --- CSS V90.8 SECURE EDITION --- */
+        /* --- CSS V90.9 STABLE --- */
         :root { 
             --bg: #0b0b0b; --card: #161616; --text: #f0f0f0; 
             --green: #00e676; --yellow: #ffea00; --orange: #ff9100; 
             --red: #ff1744; --blue: #2979ff; --purple: #d500f9;
         }
         
-        /* 1. ป้องกันการลากคลุมดำ (Text Selection Disable) */
+        /* Anti-Selection & Basic Body */
         body { 
-            font-family: 'Chakra Petch', sans-serif; 
+            font-family: 'Chakra Petch', 'Segoe UI', Tahoma, sans-serif; /* เพิ่ม Font สำรองกันตัวหนังสือหาย */
             background: var(--bg); 
             color: var(--text); 
             margin: 0; padding: 0; 
             overflow-x: hidden;
             user-select: none; /* ห้ามลากดำ */
             -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
         }
         
         /* Nav */
@@ -32,18 +30,13 @@
             border-bottom: 1px solid #333;
             padding: 10px 15px;
             display: flex; justify-content: space-between; align-items: center;
-            font-size: 0.9em;
         }
-        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; }
+        .nav-brand { color: var(--green); text-decoration: none; font-weight: bold; letter-spacing: 1px; font-size: 1.1em; }
         
-        /* แก้ไขเมนูให้แสดงผลชัดเจนและมี cursor เป็นรูปมือ */
         .nav-links { display: flex; gap: 15px; }
         .nav-links a { 
-            color: #888; 
-            text-decoration: none; 
-            font-weight: 600; 
-            transition: 0.3s; 
-            cursor: pointer; /* บังคับให้เป็นรูปมือ */
+            color: #888; text-decoration: none; font-weight: 600; 
+            transition: 0.3s; cursor: pointer; font-size: 0.9em;
         }
         .nav-links a:hover { color: #fff; text-shadow: 0 0 5px var(--blue); }
 
@@ -60,38 +53,4 @@
         
         .sys-active { color:#aaa; font-size:0.9em; margin-top:5px; }
         .dot-blink { animation: fade 2s infinite; color: var(--green); }
-        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        .btn-guide { background: transparent; border: 1px solid var(--blue); color: var(--blue); padding: 4px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 0.75em; margin-top: 5px; transition: 0.3s; }
-        .btn-guide:hover { background: var(--blue); color: #fff; }
-
-        /* Stats Grid */
-        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 10px; margin-bottom: 20px; }
-        .box { background: var(--card); padding: 15px 5px; border-radius: 6px; text-align: center; border-top: 3px solid #444; transition: transform 0.2s; }
-        .box:hover { transform: translateY(-3px); }
-        .val { font-size: 2.0em; font-weight: 700; margin: 5px 0; display: flex; justify-content: center; align-items: center; gap: 5px; white-space: nowrap; }
-        .lbl { font-size: 0.8em; font-weight: 600; color: #888; text-transform: uppercase; }
-        .unit { font-size: 0.7em; color: #666; display: block; margin-top: -5px; }
-        
-        /* Indicators */
-        .c-norm { border-top-color: var(--green) !important; color: var(--green); }
-        .c-warn { border-top-color: var(--yellow) !important; color: var(--yellow); }
-        .c-alert { border-top-color: var(--red) !important; color: var(--red); }
-        
-        .hf-banner { background: #1a1a1a; padding: 12px; text-align: center; border: 1px solid #333; margin-bottom: 20px; border-radius: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        
-        /* NVIS CSS */
-        .nvis-panel {
-            background: linear-gradient(90deg, #121212 0%, #1a1a1a 100%);
-            border: 1px solid #333;
-            border-left: 4px solid var(--purple);
-            padding: 10px 15px;
-            margin-bottom: 20px;
-            border-radius: 6px;
-            display: flex; justify-content: space-between; align-items: center;
-            flex-wrap: wrap;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-        }
-        .nvis-main { display: flex; align-items: center; }
-        .nvis-icon { color: var(--purple); font-weight: 800; margin-right: 10px; letter-spacing: 1px; }
-        .nvis-
+        @keyframes fade { 0%,100% { opacity: 1; } 50% { opacity: 0
