@@ -153,4 +153,293 @@
             const img = document.getElementById('lb-img');
             if(lb && img) {
                 img.src = src + '?t=' + new Date().getTime();
-                lb.style.setProperty
+                lb.style.setProperty('display', 'flex', 'important'); // FORCE OPEN
+            }
+        }
+
+        function hidePopup() {
+            const lb = document.getElementById('lightbox');
+            if(lb) {
+                lb.style.setProperty('display', 'none', 'important'); // FORCE CLOSE
+            }
+        }
+
+        function toggleModal() {
+            const el = document.getElementById('guideModal');
+            if(el.style.display === 'flex') el.style.setProperty('display', 'none', 'important');
+            else el.style.setProperty('display', 'flex', 'important');
+        }
+    </script>
+</head>
+<body oncontextmenu="return false;">
+
+    <nav class="ionos-nav">
+        <a href="#" class="nav-brand"><span class="blink-symbol">></span> IONOSTEK.COM</a>
+        <div class="nav-links">
+            <a href="https://ionostek.wordpress.com" target="_blank">[ DATABASE ]</a>
+            <a href="https://opl.to/ionostek" target="_blank">[ SOCIAL ]</a>
+            <a onclick="window.location.reload()">[ REFRESH ]</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <div>
+                <h1>IONOSTEK <span style="color:#fff">MONITOR</span></h1>
+                <div class="sys-active"><span class="sys-dot">●</span> System Active</div>
+            </div>
+            <div class="clock-box">
+                <div class="utc-time"><span id="u-h">00</span><span class="blink-colon">:</span><span id="u-m">00</span> UTC</div>
+                <div class="local-time" id="local-clock">-- --- ----</div>
+                <button onclick="toggleModal()" class="btn-guide">📘 OPERATOR GUIDE</button>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="box" id="b-sfi"><div class="lbl">SFI</div><div class="val" id="v-sfi">--</div><span class="unit">F10.7cm</span></div>
+            <div class="box" id="b-ssn"><div class="lbl">SSN</div><div class="val" id="v-ssn">--</div><span class="unit">Count</span></div>
+            <div class="box" id="b-kp"><div class="lbl">Kp</div><div class="val" id="v-kp">--</div><span class="unit">Index</span></div>
+            <div class="box" id="b-dst"><div class="lbl">Dst</div><div class="val" id="v-dst">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-bz"><div class="lbl">Bz</div><div class="val" id="v-bz">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-bt"><div class="lbl">Bt</div><div class="val" id="v-bt">--</div><span class="unit">nT</span></div>
+            <div class="box" id="b-wind"><div class="lbl">Wind</div><div class="val" id="v-wind">--</div><span class="unit">km/s</span></div>
+            <div class="box" id="b-den"><div class="lbl">Den</div><div class="val" id="v-den">--</div><span class="unit">p/cm³</span></div>
+        </div>
+
+        <div class="hf-banner">
+            <span style="color:#888; margin-right:10px; font-size:0.9em;">HF ESTIMATE:</span>
+            <span id="hf-cond" style="font-weight:bold;">INITIALIZING...</span>
+        </div>
+
+        <div class="nvis-panel">
+            <div class="nvis-main">
+                <span class="nvis-icon">⚡ NVIS TACTICAL:</span>
+                <span id="nvis-result" style="font-weight:bold; color:#fff">WAITING DATA...</span>
+            </div>
+            <div class="nvis-sub">
+                <span style="color:#888">Est. foF2:</span> <span id="nvis-fof2" style="color:var(--green)">-- MHz</span>
+                <span style="color:#444; margin:0 5px">|</span>
+                <span style="color:#888">Logic:</span> <span id="nvis-logic">Auto</span>
+            </div>
+        </div>
+
+        <div class="grid">
+            <div class="card" style="border-color: var(--purple);">
+                <div class="c-head">
+                    <span style="color:var(--purple); font-weight:bold;">★ GLOBAL/SEA foF2</span> 
+                    <span>SWS/AU</span>
+                </div>
+                <div class="c-body">
+                    <img src="https://www.sws.bom.gov.au/Images/HF%20Systems/Global%20HF/Ionospheric%20Map/WorldIMap0.gif" 
+                         referrerpolicy="no-referrer" 
+                         onclick="showPopup(this.src)" 
+                         onerror="this.src='https://placehold.co/600x400?text=Map+Unavailable'">
+                </div>
+            </div>
+            <div class="card"><div class="c-head"><span>PROPAGATION (TEC)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/ctipe/tec/latest.png" referrerpolicy="no-referrer" onclick="showPopup(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>SUNSPOTS (SDO/HMI)</span></div><div class="c-body"><img src="https://sdo.gsfc.nasa.gov/assets/img/latest/latest_1024_HMIIC.jpg" referrerpolicy="no-referrer" onclick="showPopup(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>SOLAR FLARES (X-RAY)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/x-rays/solar-flare-line-plot-3-day.png" referrerpolicy="no-referrer" onclick="showPopup(this.src)" onerror="this.src='https://services.swpc.noaa.gov/images/swx-overview-small.gif'"></div></div>
+            <div class="card"><div class="c-head"><span>AURORA FORECAST</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/aurora-forecast-northern-hemisphere.jpg" referrerpolicy="no-referrer" onclick="showPopup(this.src)"></div></div>
+            <div class="card"><div class="c-head"><span>RADIO BLACKOUT (D-RAP)</span></div><div class="c-body"><img src="https://services.swpc.noaa.gov/images/animations/d-rap/global/d-rap/latest.png" referrerpolicy="no-referrer" onclick="showPopup(this.src)"></div></div>
+        </div>
+
+        <div class="footer">
+            <div><span id="fetch-log">System Ready</span> <button class="btn-retry" onclick="window.location.reload()">REFRESH</button></div>
+            <span style="color:#666;">V147.0 • Bulletproof Popup</span>
+        </div>
+    </div>
+
+    <div id="guideModal" class="modal" style="display: none !important;" onclick="toggleModal()">
+        <div class="m-content" onclick="event.stopPropagation()">
+            <span class="close" onclick="toggleModal()">&times;</span>
+            <h2 style="color:var(--green); border-bottom:1px solid #444; padding-bottom:10px; margin-top:0;">OPERATOR GUIDE</h2>
+            <div class="guide-sec">
+                <div class="guide-h">★ Understanding Bz (The Switch)</div>
+                <div class="guide-p"><span class="hl-g">Bz Positive (+): "SWITCH CLOSED"</span><br>Shields UP. HF Quiet.</div>
+                <div class="guide-p"><span class="hl-r">Bz Negative (-): "SWITCH OPEN"</span><br>Shields DOWN. Storm Alert!</div>
+            </div>
+            <div>
+                <div class="guide-h">★ Reading Values</div>
+                <div class="guide-p">
+                    <span class="hl-g">Dst > -20 nT:</span> Quiet | <span class="hl-y">-20 to -50 nT:</span> Minor | <span class="hl-r">< -50 nT:</span> Storm<br>
+                    <b>Kp:</b> 0-3 Quiet, 5+ Storm | <b>Wind:</b> >500 Unstable
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="lightbox" style="display: none !important;" onclick="hidePopup()">
+        <img id="lb-img" src="" onclick="hidePopup()">
+    </div>
+
+    <script>
+        document.addEventListener('keydown', function(e) { if(e.keyCode == 123 || (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) || (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0))) { e.preventDefault(); return false; } });
+
+        // UPDATED: Function to show Date instead of Local Time
+        function updateClock() {
+            try {
+                const d = new Date();
+                if(document.getElementById('u-h')) {
+                    // UTC Time (Untouched)
+                    document.getElementById('u-h').innerText = d.getUTCHours().toString().padStart(2,'0');
+                    document.getElementById('u-m').innerText = d.getUTCMinutes().toString().padStart(2,'0');
+                    
+                    // Local Date (Modified)
+                    const months = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+                    const day = d.getDate().toString().padStart(2, '0');
+                    const month = months[d.getMonth()];
+                    const year = d.getFullYear();
+                    document.getElementById('local-clock').innerText = `${day} ${month} ${year}`;
+                }
+            } catch(e){}
+        }
+        
+        function log(msg) { try{document.getElementById('fetch-log').innerText=msg;}catch(e){} }
+
+        function set(id, val, diff=0) {
+            try {
+                let el = document.getElementById('v-'+id);
+                let box = document.getElementById('b-'+id);
+                if(!el) return;
+                let numVal = parseFloat(val);
+                if(isNaN(numVal)) { el.innerText = val; return; }
+
+                let boxClass = 'c-norm'; let valueHtml = val; let trendHtml = '';
+
+                // Trend Arrow
+                let tColor = 'var(--green)';
+                let tSymbol = '▲'; 
+                if(diff < 0) { 
+                    tSymbol = '▼';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = 'var(--green)';
+                    else tColor = 'var(--red)'; 
+                } else { 
+                    tSymbol = '▲';
+                    if(['kp', 'wind', 'den'].includes(id)) tColor = (diff > 0 ? 'var(--red)' : 'var(--green)');
+                    else tColor = 'var(--green)';
+                }
+                trendHtml = `<span class="trend-arrow" style="color:${tColor}">${tSymbol}</span>`;
+
+                const BIG_UP = '⬆'; const BIG_DOWN = '⬇'; 
+
+                switch(id) {
+                    case 'bz':
+                        let bzColor = (numVal < 0) ? 'var(--red)' : 'var(--green)';
+                        let bzArrow = (numVal < 0) ? BIG_DOWN : BIG_UP;
+                        if(numVal < 0) boxClass = 'c-warn'; if(numVal <= -5) boxClass = 'c-alert'; 
+                        valueHtml = `<span class="status-arrow" style="color:${bzColor}">${bzArrow}</span> ${val}`;
+                        break;
+                    case 'dst':
+                        let dstColor = 'var(--green)'; let dstArrow = BIG_UP;
+                        if(numVal <= -20) { dstColor = 'var(--yellow)'; dstArrow = BIG_DOWN; boxClass = 'c-warn'; }
+                        if(numVal <= -50) { dstColor = 'var(--red)'; dstArrow = BIG_DOWN; boxClass = 'c-alert'; }
+                        if(numVal <= -20) valueHtml = `<span class="status-arrow" style="color:${dstColor}">${dstArrow}</span> ${val}`;
+                        else valueHtml = val;
+                        break;
+                    case 'bt':
+                        valueHtml = `<span class="status-arrow" style="color:var(--green)">${BIG_UP}</span> ${val}`;
+                        break;
+                    case 'kp':
+                        if(numVal >= 4) boxClass = 'c-warn'; if(numVal >= 5) boxClass = 'c-alert';
+                        valueHtml = val; break;
+                    case 'wind':
+                         if(numVal >= 500) boxClass = 'c-warn'; if(numVal >= 800) boxClass = 'c-alert';
+                         valueHtml = val; break;
+                    case 'sfi':
+                        if(numVal < 70) boxClass = 'c-warn';
+                        valueHtml = val; break;
+                    default: valueHtml = val; break;
+                }
+                el.innerHTML = valueHtml + trendHtml;
+                if(box) box.className = 'box ' + boxClass;
+            } catch(e){}
+        }
+
+        async function fetchData(url, type) {
+            try {
+                let r = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
+            } catch(e) {}
+            try {
+                let r = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
+                if(r.ok) return type === 'json' ? await r.json() : await r.text();
+            } catch(e) {}
+            return null;
+        }
+
+        async function updateAll() {
+            log('Syncing...');
+            const results = await Promise.allSettled([
+                fetchData('https://services.swpc.noaa.gov/text/daily-solar-indices.txt', 'text'),
+                fetchData('https://services.swpc.noaa.gov/products/solar-wind/mag-2-hour.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/solar-wind/plasma-2-hour.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/noaa-planetary-k-index.json', 'json'),
+                fetchData('https://services.swpc.noaa.gov/products/kyoto-dst.json', 'json')
+            ]);
+
+            const txt = results[0].status === 'fulfilled' ? results[0].value : null;
+            const mag = results[1].status === 'fulfilled' ? results[1].value : null;
+            const plas = results[2].status === 'fulfilled' ? results[2].value : null;
+            const kpData = results[3].status === 'fulfilled' ? results[3].value : null;
+            const dstData = results[4].status === 'fulfilled' ? results[4].value : null;
+
+            let sfiVal=70, kpVal=2;
+
+            if(txt) {
+                let lines = txt.trim().split('\n');
+                let curr=null, prev=null;
+                for(let i=lines.length-1; i>=0; i--) {
+                    if(lines[i].trim().startsWith('20')) {
+                        let c = lines[i].trim().split(/\s+/);
+                        if(!curr) curr = c; else { prev = c; break; }
+                    }
+                }
+                if(curr) {
+                    sfiVal = parseInt(curr[3]); 
+                    set('sfi', sfiVal, prev ? sfiVal - parseInt(prev[3]) : 0);
+                    set('ssn', parseInt(curr[4]), prev ? parseInt(curr[4]) - parseInt(prev[4]) : 0);
+                }
+            }
+
+            if(mag && mag.length>2) { 
+                let l=mag[mag.length-1]; let p=mag[mag.length-2];
+                set('bz', parseFloat(l[3]).toFixed(2), parseFloat(l[3])-parseFloat(p[3])); 
+                set('bt', parseFloat(l[6]).toFixed(1), parseFloat(l[6])-parseFloat(p[6])); 
+            }
+
+            if(plas && plas.length>2) { 
+                let l=plas[plas.length-1]; let p=plas[plas.length-2];
+                set('den', Math.round(parseFloat(l[1])), parseFloat(l[1])-parseFloat(p[1])); 
+                set('wind', Math.round(parseFloat(l[2])), parseFloat(l[2])-parseFloat(p[2])); 
+            }
+
+            if(kpData && kpData.length>2) { 
+                let l=kpData[kpData.length-1]; let p=kpData[kpData.length-2]; 
+                kpVal=parseFloat(l[1]); set('kp', kpVal.toFixed(2), kpVal-parseFloat(p[1])); 
+            }
+
+            if(dstData && dstData.length>2) { 
+                let l=dstData[dstData.length-1]; let p=dstData[dstData.length-2]; 
+                set('dst', parseInt(l[1]), parseInt(l[1])-parseInt(p[1])); 
+            }
+
+            let cond = document.getElementById('hf-cond');
+            if(kpVal >= 5) { cond.innerText = "STORM ALERT"; cond.style.color = "var(--red)"; }
+            else if(sfiVal > 100) { cond.innerText = "GOOD CONDITIONS"; cond.style.color = "var(--green)"; }
+            else { cond.innerText = "FAIR / NORMAL"; cond.style.color = "#ccc"; }
+            log('System Active'); runNVISModule(sfiVal, kpVal);
+        }
+
+        function runNVISModule(sfi, kp) {
+            try { if(!sfi) sfi=70; let now=new Date(); let h=now.getHours(); let isDay=(h>=6 && h<18);
+                let foF2 = 2.0 + (sfi * 0.04); if(!isDay) foF2*=0.55; if(kp>=4) foF2*=0.85;
+                let t="", c="#fff"; if(foF2>=7.0){t="40m (7 MHz) - EXCELLENT";c="var(--green)";} else if(foF2>=5.0){t="40m (WEAK) / 60m";c="var(--yellow)";} else if(foF2>=3.5){t="80m (3.5 MHz) - GOOD";c="var(--green)";} else if(foF2>=1.8){t="160m (1.8 MHz) - REQ";c="var(--red)";} else{t="NO NVIS / BLACKOUT";c="#888";}
+                document.getElementById('nvis-result').innerText=t; document.getElementById('nvis-result').style.color=c;
+                document.getElementById('nvis-fof2').innerText=foF2.toFixed(2)+" MHz"; document.getElementById('nvis-logic').innerText=isDay?"Day":"Night";
+            } catch(e){}
+        }
+
+        window.onload = function() { setInterval(updateClock, 1000); updateClock(); updateAll(); setInterval(updateAll, 60000); };
+    </script>
+</body>
+</html>
